@@ -3,178 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beauty Hub Cosmetics Clone</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <title>Chadani Cosmetics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.5s ease-in-out;
+        }
 
-    <!-- Top Banner -->
-    <div class="top-banner">
-        BEAUTY BONANZA Get Your Daily Dose Of Amazing Deals
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="bg-pink-500 text-white text-center py-2 font-semibold">
+        BEAUTY BONANZA - Get Your Daily Dose of Amazing Deals!
     </div>
 
-    <!-- Header Section -->
-    <header class="header">
-        <div class="logo">
-            <h1>CHADANI <span>COSMETICS</span></h1>
-        </div>
-        <nav class="nav">
-            <ul>
-                <li><a href="#">Brands</a></li>
-                <li><a href="#">BEAUTY/SKINCARE TIPS</a></li>
-                <li><a href="#">SALES/OFFERS</a></li>
+    <header class="flex justify-between items-center p-5 bg-white shadow-md">
+        <h1 class="text-3xl font-bold text-pink-600">CHADANI <span class="text-gray-800">COSMETICS</span></h1>
+        <nav>
+            <ul class="flex space-x-6 text-gray-700 font-medium">
+                <li><a href="#" class="hover:text-pink-500">Brands</a></li>
+                <li><a href="#" class="hover:text-pink-500">Beauty & Skincare Tips</a></li>
+                <li><a href="#" class="hover:text-pink-500">Sales & Offers</a></li>
             </ul>
         </nav>
-        <div class="search-cart">
-            <input type="text" placeholder="Search for Product">
-            <button>🔍</button>
-            <div class="account">
-                <a href="#">Login</a> | <a href="#">Register</a>
-            </div>
-            <div class="cart-icon">
-                🛒 <span>0</span>
+        <div class="flex space-x-4 items-center">
+            <input type="text" placeholder="Search for Products" class="border p-2 rounded-lg focus:outline-none">
+            <button class="bg-pink-500 text-white px-4 py-2 rounded-lg">🔍</button>
+            <a href="#" class="text-gray-700 font-medium">Login</a> | <a href="#" class="text-gray-700 font-medium">Register</a>
+            <div class="relative">
+                🛒 <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">0</span>
             </div>
         </div>
     </header>
 
-    <!-- Categories Menu -->
-    <div class="categories">
-        <a href="#">SKIN CARE</a>
-        <a href="#">HAIR CARE</a>
-        <a href="#">MAKEUP</a>
-        <a href="#">BRUSHES & TOOLS</a>
-        <a href="#">BODY CARE</a>
-        <a href="#">BABY CARE</a>
-        <a href="#">FRAGRANCES</a>
-        <a href="#">LASHES & GLUE</a>
-        <a href="#">NAIL CARE</a>
+    <div class="flex justify-center space-x-4 bg-white py-3 shadow-md">
+        <a href="#" class="text-gray-700 hover:text-pink-500">SKIN CARE</a>
+        <a href="#" class="text-gray-700 hover:text-pink-500">HAIR CARE</a>
+        <a href="#" class="text-gray-700 hover:text-pink-500">MAKEUP</a>
+        <a href="#" class="text-gray-700 hover:text-pink-500">BRUSHES & TOOLS</a>
     </div>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-        <a href="#">Home</a> / <a href="#">Brands</a> / Mesauda Milano
-    </div>
-
-    <!-- Shop By Category Section -->
-    <section class="category-section">
-        <h2>Shop By Category</h2>
-        <div class="category-cards">
-            <div class="card skincare">
-                <h3>SKINCARE</h3>
-            </div>
-            <div class="card makeup">
-                <h3>MAKEUP</h3>
-            </div>
-            <div class="card nailcare">
-                <h3>NAIL CARE</h3>
-            </div>
+    <section class="hero text-center py-16 text-white" id="hero">
+        <div class="hero-content">
+            <h2 class="text-4xl font-bold">Discover Your Beauty</h2>
+            <p class="mt-2 text-lg">Find the best products tailored for you</p>
+            <button class="mt-5 bg-pink-500 text-white px-6 py-3 rounded-lg text-lg font-semibold">Shop Now</button>
         </div>
     </section>
-    <main class="main-section">
-        <div class="product-list">
-            <h2>All Products By Mesauda Milano</h2>
-            <hr>
-            <div class="product-container">
-                <div class="product-card">
-                    <div class="badge out-of-stock">Out of Stock</div>
-                    <img src="product1.png" alt="Mesauda blurring fan brush">
-                    <div class="product-category">MAKEUP</div>
-                    <h3>Mesauda blurring fan brush</h3>
-                    <p class="original-price">Rs.1150.00</p>
-                    <p class="discounted-price">Rs.1093.00</p>
-                    <div class="product-actions">
-                        <span>♡ Wishlist</span>
-                        <span>＋ Add to Cart</span>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="badge discount-badge">-4.90%</div>
-                    <img src="product2.png" alt="Mesauda pencil sharpener double">
-                    <div class="product-category">MAKEUP</div>
-                    <h3>Mesauda pencil sharpener double</h3>
-                    <p class="original-price">Rs.550.00</p>
-                    <p class="discounted-price">Rs.523.00</p>
-                    <div class="product-actions">
-                        <span>♡ Wishlist</span>
-                        <span>＋ Add to Cart</span>
-                    </div>
-                </div>
-                <!-- Repeat product-card divs for other products as needed -->
-            </div>
-        </div>
-    </main>
-    
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section contact">
-                <img src="logo.png" alt="Beauty Hub Logo" class="logo">
-                <p>Got Questions? Call us! <br> 01-4520305</p>
-                <p>Contact Info<br>Kamaladi, Kathmandu, Nepal</p>
-                <div class="socials">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            <div class="footer-section shopping">
-                <h3>Shopping</h3>
-                <div class="footer-links">
-                    <div class="link-column">
-                        <a href="#">MAYBELLINE</a>
-                        <a href="#">LOREAL</a>
-                        <a href="#">NYX</a>
-                        <a href="#">MAC</a>
-                        <a href="#">COLOURPOP</a>
-                        <a href="#">CETAPHIL</a>
-                        <a href="#">Wet n Wild</a>
-                        <a href="#">L.A. GIRL</a>
-                        <a href="#">GARNIER</a>
-                    </div>
-                    <div class="link-column">
-                        <a href="#">SKIN CARE</a>
-                        <a href="#">HAIR CARE</a>
-                        <a href="#">MAKEUP</a>
-                        <a href="#">BRUSHES & TOOLS</a>
-                        <a href="#">BODY CARE</a>
-                        <a href="#">BABY CARE</a>
-                        <a href="#">FRAGRANCES</a>
-                        <a href="#">LASHES & GLUE</a>
-                        <a href="#">NAIL CARE</a>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="footer-section about">
-                <h3>Beauty Hub</h3>
-                <a href="#">About Beautyhub</a>
-                <a href="#">Terms & Conditions</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Contact Us</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="features">
-                <div class="feature">
-                    <i class="fas fa-truck"></i>
-                    <p>FREE SHIPPING<br>On Orders Above Rs. 5000</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-shopping-cart"></i>
-                    <p>ONLINE ORDER<br>Minimum Orders Rs. 1000</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-certificate"></i>
-                    <p>100% AUTHENTIC<br>Products Sourced Directly</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-tags"></i>
-                    <p>50 + Brands<br>1000+ Products</p>
-                </div>
-            </div>
-            <p>&copy; 2024, Beautyhubnepal. All Rights Reserved</p>
-        </div>
-    </footer>
-    
 
+
+    <footer class="bg-gray-900 text-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
+            <div>
+                <h3 class="text-lg font-bold">Contact Us</h3>
+                <p>Dharan,Bhanuchow Nepal</p>
+                <p>Phone: 01-4520305</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold">Quick Links</h3>
+                <a href="#" class="block hover:text-pink-500">About Us</a>
+                <a href="#" class="block hover:text-pink-500">Privacy Policy</a>
+                <a href="#" class="block hover:text-pink-500">Terms & Conditions</a>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold">Follow Us</h3>
+                <div class="flex justify-center md:justify-start space-x-4">
+                    <a href="#" class="hover:text-pink-500">Facebook</a>
+                    <a href="#" class="hover:text-pink-500">Instagram</a>
+                    <a href="#" class="hover:text-pink-500">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <p class="text-center mt-6">&copy; 2024 Chadani Cosmetics. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const images = [
+    "https://cdn.thewirecutter.com/wp-content/media/2024/06/drugstorebeautyproducts-2048px-2x1-1.jpg?width=2048&quality=75&crop=2:1&auto=webp",
+    "https://images.squarespace-cdn.com/content/v1/5a1fac7e914e6b30d737146f/1723794464658-8ERV7D9MQSG6BXJPT14J/fashion_photography_mumbai-3.jpg",
+    "https://cdn.thewirecutter.com/wp-content/media/2024/12/ROUNDUP-KOREAN-SKINCARE-2048px-9736-2x1-1.jpg?width=2048&quality=75&crop=2:1&auto=webp"
+];
+
+let currentIndex = 0;
+const hero = document.getElementById('hero');
+const bgLayer = document.createElement('div');  
+
+// Create a duplicate background layer
+bgLayer.style.position = "absolute";
+bgLayer.style.top = "0";
+bgLayer.style.left = "0";
+bgLayer.style.width = "100%";
+bgLayer.style.height = "100%";
+bgLayer.style.backgroundSize = "cover";
+bgLayer.style.backgroundPosition = "center";
+bgLayer.style.opacity = "0";  
+bgLayer.style.transition = "opacity 1s ease-in-out";
+hero.appendChild(bgLayer);  
+
+function changeBackground() {
+    bgLayer.style.backgroundImage = `url('${images[currentIndex]}')`;
+    bgLayer.style.opacity = "1";  
+
+    setTimeout(() => {
+        hero.style.backgroundImage = `url('${images[currentIndex]}')`;
+        bgLayer.style.opacity = "0";  
+        currentIndex = (currentIndex + 1) % images.length;
+    }, 1000);
+}
+
+setInterval(changeBackground, 5000);
+changeBackground();
+
+    </script>
 </body>
 </html>
