@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Chadani Cosmetics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="h-screen flex justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h2 class="text-2xl font-bold text-pink-600 mb-5">Login</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700">Password</label>
+                    <input type="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <button type="submit" class="bg-pink-500 text-white w-full py-2 rounded-lg">Login</button>
+                <p class="text-center mt-4">Don't have an account? <a href="SignupPage.html" class="text-pink-600 font-bold">Sign Up</a></p>
+            </form>
+
+            <!-- Error/Success Message Area -->
+            <div id="notification" class="hidden mt-4 p-3 rounded-lg bg-red-500 text-white"></div>
+        </div>
+    </div>
+
+    <!-- Firebase App and Auth SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js';
+        
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtOIBennQ-4AnMqLR7ih7zAhv8Wdjx8ls",
+            authDomain: "cosmeticauth-b98a9.firebaseapp.com",
+            projectId: "cosmeticauth-b98a9",
+            storageBucket: "cosmeticauth-b98a9.firebasestorage.app",
+            messagingSenderId: "403211043533",
+            appId: "1:403211043533:web:6192ad208d673528aa1f84"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        // Handle Login Form Submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Notification
+            const notification = document.getElementById('notification');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Success message
+                    notification.innerText = "Login successful!";
+                    notification.classList.remove('hidden');
+                    notification.classList.remove('bg-red-500');
+                    notification.classList.add('bg-green-500');
+
+                    // Redirect to Homepage
+                    setTimeout(() => {
+                        window.location.href = "index.html"; 
+                    }, 2000);
+                })
+                .catch((error) => {
+                    // Failure message 
+                    const errorMessage = "Login failed: Please enter the correct Credential.";
+                    notification.innerText = errorMessage;
+                    notification.classList.remove('hidden');
+                    notification.classList.remove('bg-green-500');
+                    notification.classList.add('bg-red-500');
+                });
+        });
+    </script>
+</body>
+</html>
