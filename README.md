@@ -57,7 +57,7 @@ A full-featured e-commerce platform built with Django, focusing on cosmetics pro
 
 - **Backend Framework:** Django 4.x
 - **Frontend:** HTML5, CSS3, Tailwind CSS
-- **Database:** PostgreSQL
+- **Database:** SQLite
 - **Payment Gateways:** eSewa, Khalti
 - **Email Service:** SMTP (Gmail)
 - **Image Storage:** Local/Cloud Storage
