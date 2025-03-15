@@ -50,7 +50,7 @@
                     <div class="max-w-lg">
                         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Summer Collection 2024</h2>
                         <p class="text-white text-lg mb-6 opacity-90">Discover our new summer essentials with vibrant colors and lightweight formulas.</p>
-                        <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-brand-600 bg-white hover:bg-gray-100 transition-all duration-200 shadow-md">
+                        <a href="#products-section" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-brand-600 bg-white hover:bg-gray-100 transition-all duration-200 shadow-md">
                             Shop Now
                         </a>
                     </div>
@@ -64,7 +64,7 @@
                     <div class="max-w-lg">
                         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Skincare Essentials</h2>
                         <p class="text-white text-lg mb-6 opacity-90">Revitalize your skin with our premium skincare products for a natural glow.</p>
-                        <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-brand-600 bg-white hover:bg-gray-100 transition-all duration-200 shadow-md">
+                        <a href="{% url 'products:category_detail' 'skincare' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-brand-600 bg-white hover:bg-gray-100 transition-all duration-200 shadow-md">
                             Explore Skincare
                         </a>
                     </div>
@@ -78,7 +78,7 @@
                     <div class="max-w-lg">
                         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Luxury Makeup Collection</h2>
                         <p class="text-white text-lg mb-6 opacity-90">Premium makeup products for a flawless look that lasts all day.</p>
-                        <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-brand-600 bg-white hover:bg-gray-100 transition-all duration-200 shadow-md">
+                        <a href="{% url 'products:category_detail' 'makeup' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-brand-600 bg-white hover:bg-gray-100 transition-all duration-200 shadow-md">
                             Shop Makeup
                         </a>
                     </div>
@@ -136,7 +136,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10" id="products-section">
             <!-- Filter Sidebar -->
             <div class="col-span-1" data-aos="fade-right">
                 <div class="bg-white shadow-sm rounded-lg p-4 sticky top-24 border border-gray-100">
@@ -558,6 +558,23 @@
                         icon.classList.remove('rotate-180');
                     }
                 });
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100, // Offset to account for fixed header
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
     });
