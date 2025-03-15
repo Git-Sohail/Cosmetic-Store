@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Categories - Cosmetics Store{% endblock %}
+
+{% block meta_description %}Browse our collection of cosmetics categories. Find makeup, skincare, beauty tools, and more.{% endblock %}
+
+{% block meta_keywords %}cosmetics categories, makeup categories, skincare categories, beauty tools, cosmetics types{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h1 class="text-2xl font-extrabold text-gray-900 mb-8">Shop by Category</h1>
+
+        <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+            {% for category in categories %}
+            <a href="{{ category.get_absolute_url }}" class="group">
+                <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-full object-center object-cover group-hover:opacity-75">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                            <span class="text-gray-400">No image</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <h3 class="mt-4 text-sm text-gray-700">{{ category.name }}</h3>
+                {% if category.description %}
+                <p class="mt-1 text-sm text-gray-500">{{ category.description|truncatewords:20 }}</p>
+                {% endif %}
+                <div class="mt-2 text-sm text-pink-600">Browse products →</div>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500">No categories found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Shopping Cart - Cosmetics Store{% endblock %}
+
+{% block meta_description %}View your selected products in your shopping cart.{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h1 class="text-2xl font-extrabold text-gray-900 mb-8">Your Selected Products</h1>
+
+        {% if cart %}
+            <div class="mt-8">
+                <div class="flow-root">
+                    <ul role="list" class="-my-6 divide-y divide-gray-200">
+                        {% for item in cart %}
+                        <li class="py-6 flex">
+                            <a href="{{ item.product.get_absolute_url }}" class="flex flex-1 hover:opacity-75 transition-opacity">
+                                <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+                                    {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-center object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                            <span class="text-gray-400">No image</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="ml-4 flex-1 flex flex-col">
+                                    <div>
+                                        <div class="flex justify-between text-base font-medium text-gray-900">
+                                            <h3>{{ item.product.name }}</h3>
+                                        </div>
+                                        <p class="mt-1 text-sm text-gray-500">{{ item.product.category.name }}</p>
+                                    </div>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-500 line-clamp-2">{{ item.product.description }}</p>
+                                    </div>
+                                    <div class="flex-1 flex items-end justify-between text-sm">
+                                        <p class="text-gray-500">Qty {{ item.quantity }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <div class="ml-4 flex items-center">
+                                <form action="{% url 'cart:cart_remove' item.product.id %}" method="post" class="font-medium text-pink-600 hover:text-pink-500">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-sm">Remove</button>
+                                </form>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <div class="flex justify-center">
+                    <a href="{% url 'products:product_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No items in cart</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by adding some products to your cart.</p>
+                <div class="mt-6">
+                    <a href="{% url 'products:product_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

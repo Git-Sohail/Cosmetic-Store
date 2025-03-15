@@ -1,0 +1,27 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Newsletter Preferences Updated - Cosmetics Store{% endblock %}
+
+{% block email_header %}Newsletter Preferences Updated{% endblock %}
+
+{% block email_content %}
+<p>Dear {{ subscriber.email }},</p>
+
+<p>Your newsletter preferences have been successfully updated.</p>
+
+<p>Current Preferences:</p>
+<ul>
+    <li>Product Launches: {% if subscriber.product_launches %}Enabled{% else %}Disabled{% endif %}</li>
+    <li>Special Offers: {% if subscriber.special_offers %}Enabled{% else %}Disabled{% endif %}</li>
+    <li>Beauty Tips: {% if subscriber.beauty_tips %}Enabled{% else %}Disabled{% endif %}</li>
+    <li>News and Updates: {% if subscriber.news_updates %}Enabled{% else %}Disabled{% endif %}</li>
+</ul>
+
+<p>You can always update your preferences again by clicking the button below:</p>
+
+<a href="{{ protocol }}://{{ domain }}{% url 'newsletter_preferences' %}" class="button">Update Preferences</a>
+
+<p>If you didn't make these changes, please contact our customer service team immediately.</p>
+
+<p>Thank you for being a subscriber!</p>
+{% endblock %} 

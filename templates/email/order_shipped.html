@@ -1,0 +1,44 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Your Order Has Shipped - Cosmetics Store{% endblock %}
+
+{% block email_header %}Order Shipped{% endblock %}
+
+{% block email_content %}
+<p>Dear {{ order.first_name }},</p>
+
+<p>Great news! Your order has been shipped and is on its way to you.</p>
+
+<p>Order Details:</p>
+<div class="order-details">
+    <p><strong>Order Number:</strong> {{ order.id }}</p>
+    <p><strong>Shipping Date:</strong> {{ order.shipped_at|date:"F j, Y" }}</p>
+    <p><strong>Tracking Number:</strong> {{ order.tracking_number }}</p>
+</div>
+
+<p>Shipping Address:</p>
+<div class="order-details">
+    <p>{{ order.first_name }} {{ order.last_name }}</p>
+    <p>{{ order.address }}</p>
+    <p>{{ order.city }}, {{ order.postal_code }}</p>
+    <p>{{ order.country }}</p>
+</div>
+
+<p>You can track your order status by clicking the button below:</p>
+
+<a href="{{ order.get_absolute_url }}" class="button">Track Order</a>
+
+<p>Order Items:</p>
+<div class="order-details">
+    {% for item in order.items.all %}
+    <div class="order-item">
+        <p><strong>{{ item.product.name }}</strong></p>
+        <p>Quantity: {{ item.quantity }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<p>We hope you enjoy your products! If you have any questions, please don't hesitate to contact our customer service team.</p>
+
+<p>Thank you for shopping with us!</p>
+{% endblock %} 

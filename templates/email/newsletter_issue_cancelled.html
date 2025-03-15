@@ -1,0 +1,43 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Newsletter Issue Cancelled - Cosmetics Store{% endblock %}
+
+{% block email_header %}Newsletter Issue Cancelled{% endblock %}
+
+{% block email_content %}
+<p>Dear Administrator,</p>
+
+<p>The scheduled newsletter issue "{{ issue.title }}" has been cancelled.</p>
+
+<div class="issue-details">
+    <p><strong>Issue Details:</strong></p>
+    <ul>
+        <li>Issue ID: {{ issue.id }}</li>
+        <li>Title: {{ issue.title }}</li>
+        <li>Originally Scheduled For: {{ issue.scheduled_for|date:"F j, Y, g:i a" }}</li>
+        <li>Cancelled At: {{ issue.cancelled_at|date:"F j, Y, g:i a" }}</li>
+        <li>Cancelled By: {{ issue.cancelled_by.get_full_name|default:issue.cancelled_by.username }}</li>
+        <li>Status: {{ issue.status }}</li>
+    </ul>
+</div>
+
+{% if issue.cancellation_reason %}
+<div class="cancellation-details">
+    <p><strong>Cancellation Reason:</strong></p>
+    <p>{{ issue.cancellation_reason }}</p>
+</div>
+{% endif %}
+
+<div class="admin-actions">
+    <p><strong>Admin Actions:</strong></p>
+    <ul>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_change' issue.id %}">View Issue</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_schedule' issue.id %}">Reschedule</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_list' %}">View All Issues</a></li>
+    </ul>
+</div>
+
+<p>If you need to send this newsletter in the future, you can reschedule it or create a new issue based on this one.</p>
+
+<p>Thank you for using our newsletter system!</p>
+{% endblock %} 

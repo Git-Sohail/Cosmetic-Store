@@ -1,0 +1,25 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Newsletter Subscription Confirmed - Cosmetics Store{% endblock %}
+
+{% block email_header %}Newsletter Subscription Confirmed{% endblock %}
+
+{% block email_content %}
+<p>Dear {{ subscriber.email }},</p>
+
+<p>Thank you for subscribing to our newsletter! You're now part of our beauty community and will receive:</p>
+<ul>
+    <li>Exclusive product launches and promotions</li>
+    <li>Beauty tips and tutorials</li>
+    <li>Special discounts and offers</li>
+    <li>News and updates about our store</li>
+</ul>
+
+<p>You can manage your subscription preferences by clicking the button below:</p>
+
+<a href="{{ protocol }}://{{ domain }}{% url 'newsletter_preferences' %}" class="button">Manage Preferences</a>
+
+<p>If you didn't subscribe to our newsletter, you can safely ignore this email or contact our customer service team.</p>
+
+<p>Thank you for your interest in Cosmetics Store!</p>
+{% endblock %} 

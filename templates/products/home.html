@@ -1,0 +1,123 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Welcome to Cosmetics Store{% endblock %}
+
+{% block meta_description %}Discover our collection of high-quality cosmetics and beauty products. Shop the latest trends in makeup, skincare, and beauty tools.{% endblock %}
+
+{% block meta_keywords %}cosmetics, makeup, beauty products, skincare, beauty tools, makeup brushes, lipstick, foundation, mascara{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+        <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+            <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+                <div class="sm:text-center lg:text-left">
+                    <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                        <span class="block">Discover Your</span>
+                        <span class="block text-pink-600">Natural Beauty</span>
+                    </h1>
+                    <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                        Shop our collection of premium cosmetics and beauty products. Enhance your natural beauty with our carefully curated selection.
+                    </p>
+                    <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                        <div class="rounded-md shadow">
+                            <a href="{% url 'products:product_list' %}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 md:py-4 md:text-lg md:px-10">
+                                Shop Now
+                            </a>
+                        </div>
+                        <div class="mt-3 sm:mt-0 sm:ml-3">
+                            <a href="{% url 'products:category_list' %}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-pink-700 bg-pink-100 hover:bg-pink-200 md:py-4 md:text-lg md:px-10">
+                                Browse Categories
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Categories -->
+<div class="bg-white">
+    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 class="text-2xl font-extrabold text-gray-900 mb-6">Shop by Category</h2>
+        <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+            {% for category in categories %}
+            <a href="{{ category.get_absolute_url }}" class="group">
+                <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-full object-center object-cover group-hover:opacity-75">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                            <span class="text-gray-400">No image</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <h3 class="mt-4 text-sm text-gray-700">{{ category.name }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Featured Products -->
+<div class="bg-white">
+    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 class="text-2xl font-extrabold text-gray-900 mb-6">Featured Products</h2>
+        <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+            {% for product in featured_products %}
+            <div class="group">
+                <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-center object-cover group-hover:opacity-75">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                            <span class="text-gray-400">No image</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <h3 class="mt-4 text-sm text-gray-700">
+                    <a href="{{ product.get_absolute_url }}">
+                        <span aria-hidden="true" class="absolute inset-0"></span>
+                        {{ product.name }}
+                    </a>
+                </h3>
+                <p class="mt-1 text-lg font-medium text-gray-900">${{ product.price }}</p>
+                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2">
+                        Add to Cart
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<div class="bg-pink-50">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center">
+        <div class="lg:w-0 lg:flex-1">
+            <h2 class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                Sign up for our newsletter
+            </h2>
+            <p class="mt-3 max-w-3xl text-lg leading-6 text-gray-500">
+                Get the latest updates on new products and upcoming sales.
+            </p>
+        </div>
+        <div class="mt-8 lg:mt-0 lg:ml-8">
+            <form class="sm:flex">
+                <label for="email-address" class="sr-only">Email address</label>
+                <input id="email-address" name="email-address" type="email" autocomplete="email" required class="w-full px-5 py-3 border border-gray-300 shadow-sm placeholder-gray-400 focus:ring-1 focus:ring-pink-500 focus:border-pink-500 sm:max-w-xs sm:rounded-md" placeholder="Enter your email">
+                <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3 sm:flex-shrink-0">
+                    <button type="submit" class="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                        Subscribe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,82 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}{{ issue.title }} - Test Email - Cosmetics Store Newsletter{% endblock %}
+
+{% block email_header %}{{ issue.title }} - Test Email{% endblock %}
+
+{% block email_content %}
+<div class="test-notice">
+    <p><strong>This is a test email of the newsletter issue.</strong></p>
+    <p>Recipient: {{ admin_email }}</p>
+    <p>Issue ID: {{ issue.id }}</p>
+    <p>Status: {{ issue.status }}</p>
+    <p>Scheduled for: {{ issue.scheduled_for|date:"F j, Y, g:i a" }}</p>
+</div>
+
+{% if issue.introduction %}
+<div class="newsletter-section">
+    {{ issue.introduction|safe }}
+</div>
+{% endif %}
+
+{% if issue.featured_products %}
+<div class="newsletter-section">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+        {% for product in issue.featured_products %}
+        <div class="product-item">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }}</p>
+            <a href="{{ protocol }}://{{ domain }}{{ product.get_absolute_url }}" class="button">View Product</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if issue.beauty_tips %}
+<div class="newsletter-section">
+    <h2>Beauty Tips</h2>
+    {{ issue.beauty_tips|safe }}
+</div>
+{% endif %}
+
+{% if issue.special_offers %}
+<div class="newsletter-section">
+    <h2>Special Offers</h2>
+    {{ issue.special_offers|safe }}
+</div>
+{% endif %}
+
+{% if issue.news_updates %}
+<div class="newsletter-section">
+    <h2>News & Updates</h2>
+    {{ issue.news_updates|safe }}
+</div>
+{% endif %}
+
+{% if issue.conclusion %}
+<div class="newsletter-section">
+    {{ issue.conclusion|safe }}
+</div>
+{% endif %}
+
+<div class="test-actions">
+    <p>To manage your newsletter preferences, click the button below:</p>
+    <a href="{{ protocol }}://{{ domain }}{% url 'newsletter_preferences' %}" class="button">Manage Preferences</a>
+
+    <p>To unsubscribe from our newsletter, click here:</p>
+    <a href="{{ protocol }}://{{ domain }}{% url 'newsletter_unsubscribe' %}" class="button">Unsubscribe</a>
+</div>
+
+<div class="test-footer">
+    <p><strong>Admin Actions:</strong></p>
+    <ul>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_change' issue.id %}">Edit Issue</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_send' issue.id %}">Send Now</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_schedule' issue.id %}">Schedule</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_test' issue.id %}">Send Another Test</a></li>
+    </ul>
+</div>
+{% endblock %} 

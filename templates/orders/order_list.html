@@ -1,0 +1,136 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Orders - Cosmetics Store{% endblock %}
+
+{% block meta_description %}View your order history and track the status of your orders.{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h1 class="text-2xl font-extrabold text-gray-900 mb-8">My Orders</h1>
+
+        {% if orders %}
+            <div class="mt-8">
+                <div class="flow-root">
+                    <ul role="list" class="-my-6 divide-y divide-gray-200">
+                        {% for order in orders %}
+                        <li class="py-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        Order #{{ order.id }}
+                                    </h3>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Placed on {{ order.created_at|date:"F j, Y" }}
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-medium text-gray-900">${{ order.total_amount }}</p>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Status: <span class="capitalize">{{ order.status }}</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <div class="flow-root">
+                                    <ul role="list" class="-my-6 divide-y divide-gray-200">
+                                        {% for item in order.items.all %}
+                                        <li class="py-6 flex">
+                                            <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+                                                {% if item.product.image %}
+                                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-center object-cover">
+                                                {% else %}
+                                                    <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                                        <span class="text-gray-400">No image</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="ml-4 flex-1 flex flex-col">
+                                                <div>
+                                                    <div class="flex justify-between text-base font-medium text-gray-900">
+                                                        <h4>
+                                                            <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                                                        </h4>
+                                                        <p class="ml-4">${{ item.get_cost }}</p>
+                                                    </div>
+                                                    <p class="mt-1 text-sm text-gray-500">Qty {{ item.quantity }}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <div class="flex justify-between text-sm">
+                                    <div>
+                                        <p class="text-gray-500">Shipping Address:</p>
+                                        <p class="mt-1 text-gray-900">{{ order.address }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-gray-500">Contact:</p>
+                                        <p class="mt-1 text-gray-900">{{ order.phone }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if is_paginated %}
+            <div class="mt-8 flex justify-center">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Previous</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <span class="relative inline-flex items-center px-4 py-2 border border-pink-500 bg-pink-50 text-sm font-medium text-pink-600">
+                            {{ num }}
+                        </span>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            {{ num }}
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Next</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by adding some products to your cart.</p>
+                <div class="mt-6">
+                    <a href="{% url 'products:product_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                        Start Shopping
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

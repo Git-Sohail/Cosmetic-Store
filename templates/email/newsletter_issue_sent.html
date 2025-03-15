@@ -1,0 +1,41 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Newsletter Issue Sent - Cosmetics Store{% endblock %}
+
+{% block email_header %}Newsletter Issue Sent Successfully{% endblock %}
+
+{% block email_content %}
+<p>Dear Administrator,</p>
+
+<p>The newsletter issue "{{ issue.title }}" has been successfully sent to all subscribers.</p>
+
+<div class="issue-details">
+    <p><strong>Issue Details:</strong></p>
+    <ul>
+        <li>Issue ID: {{ issue.id }}</li>
+        <li>Title: {{ issue.title }}</li>
+        <li>Sent Date: {{ issue.sent_at|date:"F j, Y, g:i a" }}</li>
+        <li>Total Recipients: {{ issue.sent_count }}</li>
+        <li>Failed Deliveries: {{ issue.failed_count }}</li>
+    </ul>
+</div>
+
+{% if issue.failed_count > 0 %}
+<div class="failed-deliveries">
+    <p><strong>Failed Deliveries:</strong></p>
+    <p>{{ issue.failed_count }} emails failed to deliver. You can view the detailed report in the admin interface.</p>
+    <a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_delivery_report' issue.id %}" class="button">View Delivery Report</a>
+</div>
+{% endif %}
+
+<div class="admin-actions">
+    <p><strong>Admin Actions:</strong></p>
+    <ul>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_change' issue.id %}">View Issue</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_list' %}">View All Issues</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_add' %}">Create New Issue</a></li>
+    </ul>
+</div>
+
+<p>Thank you for using our newsletter system!</p>
+{% endblock %} 

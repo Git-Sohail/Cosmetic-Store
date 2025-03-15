@@ -1,0 +1,31 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Your Order Has Been Delivered - Cosmetics Store{% endblock %}
+
+{% block email_header %}Order Delivered{% endblock %}
+
+{% block email_content %}
+<p>Dear {{ order.first_name }},</p>
+
+<p>Your order has been successfully delivered!</p>
+
+<p>Order Details:</p>
+<div class="order-details">
+    <p><strong>Order Number:</strong> {{ order.id }}</p>
+    <p><strong>Delivery Date:</strong> {{ order.delivered_at|date:"F j, Y" }}</p>
+</div>
+
+<p>Order Items:</p>
+<div class="order-details">
+    {% for item in order.items.all %}
+    <div class="order-item">
+        <p><strong>{{ item.product.name }}</strong></p>
+        <p>Quantity: {{ item.quantity }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<p>We hope you're happy with your purchase! If you have any questions or concerns, please don't hesitate to contact our customer service team.</p>
+
+<p>Thank you for choosing Cosmetics Store!</p>
+{% endblock %} 

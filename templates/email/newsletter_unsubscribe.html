@@ -1,0 +1,21 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Newsletter Unsubscribe Confirmed - Cosmetics Store{% endblock %}
+
+{% block email_header %}Newsletter Unsubscribe Confirmed{% endblock %}
+
+{% block email_content %}
+<p>Dear {{ subscriber.email }},</p>
+
+<p>You have been successfully unsubscribed from our newsletter.</p>
+
+<p>We're sorry to see you go! If you change your mind, you can always resubscribe by visiting our website and entering your email address in the newsletter signup form.</p>
+
+<p>To resubscribe, click the button below:</p>
+
+<a href="{{ protocol }}://{{ domain }}{% url 'newsletter_subscribe' %}" class="button">Resubscribe</a>
+
+<p>If you have any feedback about our newsletter or suggestions for improvement, please let us know by contacting our customer service team.</p>
+
+<p>Thank you for being a subscriber!</p>
+{% endblock %} 

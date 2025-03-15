@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cosmetics Store{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Your one-stop shop for high-quality cosmetics{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}cosmetics, makeup, beauty, skincare{% endblock %}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}Cosmetics Store{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Your one-stop shop for high-quality cosmetics{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% endblock %}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Swiper Slider CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        'brand': {
+                            50: '#FFF5F7',
+                            100: '#FFEAEF',
+                            200: '#FFCBD6',
+                            300: '#FF9FB3',
+                            400: '#FF6B8A',
+                            500: '#FF3366',
+                            600: '#E61B50',
+                            700: '#C1103E',
+                            800: '#9C0A32',
+                            900: '#7A0828',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #FF3366, #FF9FB3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+            background: linear-gradient(to right, #FF3366, #FF6B8A);
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #E61B50, #FF3366);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #FF3366;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .card-hover {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+    
+    <!-- Custom CSS -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Announcement Bar -->
+    <div class="bg-brand-500 text-white py-2 px-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-sm font-medium">
+                <span class="hidden md:inline">Free shipping on orders over $50!</span>
+                <span class="md:hidden">Free shipping over $50!</span>
+            </div>
+            <div class="flex space-x-4 text-sm">
+                <a href="#" class="hover:text-brand-200 transition">Track Order</a>
+                <a href="#" class="hover:text-brand-200 transition">Contact Us</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{% url 'products:product_list' %}" class="text-2xl font-bold">
+                            <span class="text-gradient">Cosmetics Store</span>
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="{% url 'products:product_list' %}" class="nav-link {% if request.resolver_match.url_name == 'product_list' %}active text-brand-500{% else %}text-gray-500 hover:text-brand-500{% endif %} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors duration-200">
+                            Home
+                        </a>
+                        <a href="{% url 'products:product_list' %}" class="nav-link {% if request.resolver_match.url_name == 'product_list' %}active text-brand-500{% else %}text-gray-500 hover:text-brand-500{% endif %} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors duration-200">
+                            Products
+                        </a>
+                        <a href="{% url 'products:category_list' %}" class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active text-brand-500{% else %}text-gray-500 hover:text-brand-500{% endif %} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors duration-200">
+                            Categories
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="hidden md:flex items-center flex-1 max-w-xs mx-4">
+                    <form action="{% url 'products:product_list' %}" method="get" class="w-full">
+                        <div class="relative">
+                            <input type="text" name="search" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="flex items-center">
+                    <a href="{% url 'cart:cart_detail' %}" class="p-2 text-gray-400 hover:text-brand-500 transition-colors duration-200 relative">
+                        <span class="sr-only">Cart</span>
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span class="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-brand-500 rounded-full">
+                            {{ cart_count|default:0 }}
+                        </span>
+                    </a>
+                    
+                    <button type="button" class="md:hidden ml-2 p-2 text-gray-400 hover:text-brand-500" id="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    {% if user.is_authenticated %}
+                        <div class="ml-3 relative">
+                            <div>
+                                <button type="button" class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500" id="user-menu-button">
+                                    <span class="sr-only">Open user menu</span>
+                                    <span class="inline-block h-8 w-8 rounded-full overflow-hidden bg-gray-100">
+                                        <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" id="user-menu">
+                                <a href="{% url 'users:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                                <a href="{% url 'orders:order_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Orders</a>
+                                <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white btn-gradient shadow-sm hover:shadow transition-all duration-200">
+                            Sign in
+                        </a>
+                        <a href="{% url 'account_signup' %}" class="ml-3 hidden md:inline-flex items-center px-4 py-2 border border-brand-500 text-sm font-medium rounded-full text-brand-500 bg-white hover:bg-brand-50 transition-all duration-200">
+                            Sign up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Mobile menu, show/hide based on menu state -->
+        <div class="hidden bg-white border-b border-gray-200 p-4" id="mobile-menu">
+            <div class="mb-4">
+                <form action="{% url 'products:product_list' %}" method="get">
+                    <div class="relative">
+                        <input type="text" name="search" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="space-y-1">
+                <a href="{% url 'products:product_list' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.url_name == 'product_list' %}text-brand-500 bg-brand-50{% else %}text-gray-700 hover:bg-gray-50 hover:text-brand-500{% endif %}">
+                    Home
+                </a>
+                <a href="{% url 'products:product_list' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.url_name == 'product_list' %}text-brand-500 bg-brand-50{% else %}text-gray-700 hover:bg-gray-50 hover:text-brand-500{% endif %}">
+                    Products
+                </a>
+                <a href="{% url 'products:category_list' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.url_name == 'category_list' %}text-brand-500 bg-brand-50{% else %}text-gray-700 hover:bg-gray-50 hover:text-brand-500{% endif %}">
+                    Categories
+                </a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'account_signup' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-500 md:hidden">
+                        Sign up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="rounded-md bg-{{ message.tags }}-50 p-4 mb-4 animate-fade-in">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-times-circle text-red-400"></i>
+                            {% elif message.tags == 'info' %}
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-circle text-yellow-400"></i>
+                            {% endif %}
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-{{ message.tags }}-800">
+                                {{ message }}
+                            </p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <div class="-mx-1.5 -my-1.5">
+                                <button class="message-close inline-flex rounded-md p-1.5 text-{{ message.tags }}-500 hover:bg-{{ message.tags }}-100 focus:outline-none">
+                                    <span class="sr-only">Dismiss</span>
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Newsletter -->
+    <section class="bg-gradient-to-r from-brand-600 to-brand-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:flex lg:items-center lg:justify-between">
+                <div class="lg:w-0 lg:flex-1">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl" data-aos="fade-right">
+                        Join our newsletter
+                    </h2>
+                    <p class="mt-3 max-w-3xl text-lg leading-6 text-white opacity-90" data-aos="fade-right" data-aos-delay="100">
+                        Get exclusive offers, beauty tips, and new product announcements.
+                    </p>
+                </div>
+                <div class="mt-8 lg:mt-0 lg:ml-8" data-aos="fade-left">
+                    <form class="sm:flex">
+                        <label for="email-address" class="sr-only">Email address</label>
+                        <input id="email-address" name="email-address" type="email" autocomplete="email" required class="w-full px-5 py-3 border-0 shadow-sm placeholder-gray-400 focus:ring-2 focus:ring-white focus:border-white sm:max-w-xs rounded-l-full" placeholder="Enter your email">
+                        <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-0 sm:flex-shrink-0">
+                            <button type="submit" class="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-r-full text-brand-600 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-500">
+                                Subscribe
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div data-aos="fade-up" data-aos-delay="0">
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">About Us</h3>
+                    <p class="mt-4 text-base text-gray-500">
+                        Your one-stop shop for high-quality cosmetics and beauty products. We believe in beauty that empowers.
+                    </p>
+                    <div class="mt-4">
+                        <a href="#" class="text-brand-500 hover:text-brand-600 font-medium flex items-center">
+                            Learn more about us
+                            <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Customer Service</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">Shipping Policy</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">Returns & Exchanges</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">FAQ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Legal</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">Privacy Policy</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">Terms of Service</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-500 hover:text-brand-500 transition-colors duration-200">Cookie Policy</a>
+                        </li>
+                    </ul>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Connect With Us</h3>
+                    <div class="mt-4 flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors duration-200">
+                            <span class="sr-only">Facebook</span>
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors duration-200">
+                            <span class="sr-only">Instagram</span>
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors duration-200">
+                            <span class="sr-only">Twitter</span>
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-brand-500 transition-colors duration-200">
+                            <span class="sr-only">TikTok</span>
+                            <i class="fab fa-tiktok text-xl"></i>
+                        </a>
+                    </div>
+                    <div class="mt-8">
+                        <h4 class="text-sm font-semibold text-gray-400">Payment Methods</h4>
+                        <div class="mt-2 flex space-x-3">
+                            <i class="fab fa-cc-visa text-2xl text-gray-400"></i>
+                            <i class="fab fa-cc-mastercard text-2xl text-gray-400"></i>
+                            <i class="fab fa-cc-amex text-2xl text-gray-400"></i>
+                            <i class="fab fa-cc-paypal text-2xl text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8">
+                <p class="text-base text-gray-400 text-center">
+                    &copy; 2024 Cosmetics Store. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 p-3 rounded-full bg-brand-500 text-white shadow-lg opacity-0 invisible transition-all duration-300 z-50 hover:bg-brand-600">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    
+    <!-- JavaScript -->
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
+        // User menu toggle
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        
+        // Message close buttons
+        document.querySelectorAll('.message-close').forEach(button => {
+            button.addEventListener('click', () => {
+                button.closest('.rounded-md').remove();
+            });
+        });
+        
+        // Back to top button
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        if (backToTopButton) {
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

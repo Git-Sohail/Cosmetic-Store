@@ -1,0 +1,28 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Welcome to Cosmetics Store!{% endblock %}
+
+{% block email_header %}Welcome to Cosmetics Store{% endblock %}
+
+{% block email_content %}
+<p>Dear {{ user.first_name }},</p>
+
+<p>Welcome to Cosmetics Store! We're excited to have you join our community of beauty enthusiasts.</p>
+
+<p>With your new account, you can:</p>
+<ul>
+    <li>Browse our extensive collection of high-quality cosmetics</li>
+    <li>Save your favorite products to your wishlist</li>
+    <li>Track your orders</li>
+    <li>Write reviews and share your experiences</li>
+    <li>Receive exclusive offers and updates</li>
+</ul>
+
+<p>To get started, click the button below to explore our products:</p>
+
+<a href="{{ protocol }}://{{ domain }}{% url 'product_list' %}" class="button">Start Shopping</a>
+
+<p>If you have any questions or need assistance, our customer service team is here to help!</p>
+
+<p>Thank you for choosing Cosmetics Store!</p>
+{% endblock %} 

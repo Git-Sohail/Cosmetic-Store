@@ -1,0 +1,420 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ category.name }} - Cosmetics Store{% endblock %}
+
+{% block meta_description %}Browse our collection of {{ category.name }} products. Find the best {{ category.name }} for your beauty routine.{% endblock %}
+
+{% block meta_keywords %}{{ category.name }}, cosmetics, beauty products, {{ category.name }} products{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumbs -->
+        <nav class="flex mb-8" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li>
+                    <a href="{% url 'products:product_list' %}" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-home"></i>
+                        <span class="sr-only">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 text-xs mx-2"></i>
+                        <a href="{% url 'products:product_list' %}" class="text-gray-400 hover:text-gray-500">Products</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 text-xs mx-2"></i>
+                        <span class="text-gray-700">{{ category.name }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Category Banner -->
+        <div class="relative mb-12 overflow-hidden rounded-xl shadow-lg" data-aos="fade-up">
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-900/70 to-transparent z-10"></div>
+            {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-[300px] object-cover">
+            {% else %}
+                <div class="w-full h-[300px] bg-gradient-to-r from-brand-100 to-brand-300 flex items-center justify-center">
+                    <span class="text-brand-700 text-2xl font-bold">{{ category.name }}</span>
+                </div>
+            {% endif %}
+            <div class="absolute inset-0 flex items-center z-20 px-8 md:px-16">
+                <div class="max-w-lg">
+                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ category.name }}</h1>
+                    <p class="text-white text-lg mb-6 opacity-90">Discover our premium collection of {{ category.name }} products designed for your beauty needs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-900" data-aos="fade-right">{{ category.name }} Products</h2>
+            <div class="flex items-center space-x-4" data-aos="fade-left">
+                <form method="get" class="flex items-center space-x-2">
+                    <label for="sort" class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select name="sort" id="sort" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm rounded-md">
+                        <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+                        <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+                        <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
+                        <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
+                    </select>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                        Apply
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
+            <!-- Filter Sidebar -->
+            <div class="col-span-1" data-aos="fade-right">
+                <div class="bg-white shadow rounded-lg p-6 sticky top-24">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Filters</h2>
+                    <form method="get" id="filter-form">
+                        <!-- Preserve sort parameter if set -->
+                        {% if sort_by %}
+                        <input type="hidden" name="sort" value="{{ sort_by }}">
+                        {% endif %}
+                        
+                        <!-- Search -->
+                        <div class="mb-6">
+                            <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                            <div class="relative">
+                                <input type="text" name="search" id="search" value="{{ query }}" placeholder="Search products..." 
+                                    class="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-brand-500 focus:border-brand-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price Range -->
+                        <div class="mb-6">
+                            <h3 class="text-sm font-medium text-gray-700 mb-2">Price Range</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label for="min_price" class="block text-xs text-gray-500">Min ($)</label>
+                                    <input type="number" id="min_price" name="min_price" value="{{ min_price }}" min="0" step="0.01"
+                                        class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500">
+                                </div>
+                                <div>
+                                    <label for="max_price" class="block text-xs text-gray-500">Max ($)</label>
+                                    <input type="number" id="max_price" name="max_price" value="{{ max_price }}" min="0" step="0.01"
+                                        class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stock Status -->
+                        <div class="mb-6">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="in_stock" name="in_stock" value="true" 
+                                    {% if in_stock == 'true' %}checked{% endif %}
+                                    class="h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300 rounded">
+                                <label for="in_stock" class="ml-2 text-sm text-gray-700">In Stock Only</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Filter Buttons -->
+                        <div class="flex space-x-2">
+                            <button type="submit" class="w-full bg-brand-500 text-white py-2 px-4 rounded-md hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-colors duration-200">
+                                Apply Filters
+                            </button>
+                            <a href="{{ category.get_absolute_url }}" class="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-center transition-colors duration-200">
+                                Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Product Grid -->
+            <div class="col-span-1 lg:col-span-3">
+                <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {% for product in products %}
+                    <div class="group relative card-hover bg-white rounded-lg overflow-hidden shadow-sm" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                        <div class="relative">
+                            <a href="{{ product.get_absolute_url }}" class="block">
+                                <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 overflow-hidden">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-center object-cover group-hover:scale-105 transition-transform duration-500">
+                                    {% else %}
+                                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                            <span class="text-gray-400">No image</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% if product.stock <= 5 and product.stock > 0 %}
+                                <span class="absolute top-2 left-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Only {{ product.stock }} left</span>
+                                {% endif %}
+                                {% if product.stock == 0 %}
+                                <span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Out of Stock</span>
+                                {% endif %}
+                            </a>
+                            <div class="absolute top-2 right-2 flex flex-col space-y-2">
+                                <button type="button" class="p-2 bg-white rounded-full shadow-md text-gray-400 hover:text-brand-500 transition-colors duration-200 wishlist-button">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button type="button" class="p-2 bg-white rounded-full shadow-md text-gray-400 hover:text-brand-500 transition-colors duration-200 quick-view-button" data-product-id="{{ product.id }}">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <a href="{{ product.get_absolute_url }}" class="block">
+                                    <h3 class="text-sm font-medium text-gray-700 group-hover:text-brand-500 transition-colors duration-200">
+                                        {{ product.name }}
+                                    </h3>
+                                </a>
+                                <div class="flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(4.5)</span>
+                                </div>
+                            </div>
+                            <p class="mt-1 text-lg font-semibold text-brand-500">${{ product.price }}</p>
+                            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mt-3">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <input type="hidden" name="override" value="False">
+                                <div class="flex space-x-2">
+                                    <button type="submit" {% if product.stock == 0 %}disabled{% endif %} class="flex-1 bg-brand-500 text-white py-2 px-2 rounded-md hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}">
+                                        <i class="fas fa-shopping-bag mr-1"></i>
+                                        <span class="text-xs">Add to Cart</span>
+                                    </button>
+                                    <button type="submit" formaction="{% url 'orders:buy_now' product.id %}" {% if product.stock == 0 %}disabled{% endif %} class="flex-1 bg-brand-600 text-white py-2 px-2 rounded-md hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}">
+                                        <i class="fas fa-bolt mr-1"></i>
+                                        <span class="text-xs">Buy Now</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full text-center py-12">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500 mb-2">No products found in this category.</p>
+                            <p class="text-gray-400 text-sm">Try adjusting your search or filter criteria.</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if is_paginated %}
+                <div class="mt-8 flex justify-center" data-aos="fade-up">
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&search={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if in_stock %}&in_stock={{ in_stock }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <span class="relative inline-flex items-center px-4 py-2 border border-brand-500 bg-brand-50 text-sm font-medium text-brand-600">
+                                {{ num }}
+                            </span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a href="?page={{ num }}{% if query %}&search={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if in_stock %}&in_stock={{ in_stock }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                {{ num }}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if query %}&search={{ query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if in_stock %}&in_stock={{ in_stock }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick View Modal -->
+<div id="quick-view-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+            <div class="absolute top-0 right-0 pt-4 pr-4">
+                <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none" id="close-modal">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="md:w-1/2">
+                        <div class="bg-gray-100 rounded-lg overflow-hidden">
+                            <img id="modal-product-image" src="" alt="" class="w-full h-auto object-cover">
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <h3 id="modal-product-name" class="text-2xl font-bold text-gray-900 mb-2"></h3>
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-500 ml-2">(4.5)</span>
+                        </div>
+                        <p id="modal-product-price" class="text-2xl font-bold text-brand-500 mb-4"></p>
+                        <div id="modal-product-description" class="text-gray-700 mb-6"></div>
+                        <div class="flex space-x-4 mb-6">
+                            <div class="w-24">
+                                <label for="modal-quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                <input type="number" id="modal-quantity" min="1" value="1" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Availability</label>
+                                <div id="modal-product-stock" class="text-sm"></div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-4">
+                            <form id="modal-add-to-cart-form" method="post" class="flex-1">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" id="modal-quantity-input" value="1">
+                                <input type="hidden" name="override" value="False">
+                                <div class="flex space-x-2 mb-2">
+                                    <button type="submit" id="modal-add-to-cart" class="flex-1 bg-brand-500 text-white py-3 px-4 rounded-md hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center">
+                                        <i class="fas fa-shopping-bag mr-2"></i>
+                                        Add to Cart
+                                    </button>
+                                    <button type="submit" id="modal-buy-now" class="flex-1 bg-brand-600 text-white py-3 px-4 rounded-md hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center">
+                                        <i class="fas fa-bolt mr-2"></i>
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </form>
+                            <button id="modal-view-details" class="bg-gray-200 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200">
+                                <i class="fas fa-external-link-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wishlist button functionality
+        document.querySelectorAll('.wishlist-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.classList.add('text-brand-500');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.remove('text-brand-500');
+                    icon.classList.add('far');
+                }
+            });
+        });
+        
+        // Quick view functionality
+        const modal = document.getElementById('quick-view-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        document.querySelectorAll('.quick-view-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                
+                // Fetch product details via AJAX
+                fetch(`/product/quick-view/${productId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('modal-product-name').textContent = data.name;
+                        document.getElementById('modal-product-price').textContent = `$${data.price}`;
+                        document.getElementById('modal-product-description').textContent = data.description;
+                        
+                        if (data.in_stock) {
+                            if (data.low_stock) {
+                                document.getElementById('modal-product-stock').innerHTML = `<span class="text-yellow-500">Only ${data.stock} left in stock</span>`;
+                            } else {
+                                document.getElementById('modal-product-stock').innerHTML = '<span class="text-green-500">In Stock</span>';
+                            }
+                        } else {
+                            document.getElementById('modal-product-stock').innerHTML = '<span class="text-red-500">Out of Stock</span>';
+                        }
+                        
+                        document.getElementById('modal-product-image').src = data.image_url;
+                        
+                        // Set up the view details button to go to the product detail page
+                        document.getElementById('modal-view-details').onclick = function() {
+                            window.location.href = data.url;
+                        };
+                        
+                        // Set up the add to cart form
+                        const addToCartForm = document.getElementById('modal-add-to-cart-form');
+                        addToCartForm.action = `/cart/add/${data.id}/`;
+                        
+                        // Set up the buy now button
+                        const buyNowButton = document.getElementById('modal-buy-now');
+                        buyNowButton.onclick = function(e) {
+                            e.preventDefault();
+                            const quantityInput = document.getElementById('modal-quantity-input');
+                            quantityInput.value = document.getElementById('modal-quantity').value;
+                            addToCartForm.action = `/orders/buy-now/${data.id}/`;
+                            addToCartForm.submit();
+                        };
+                        
+                        // Update quantity input with the value from the modal quantity field
+                        const modalQuantity = document.getElementById('modal-quantity');
+                        const modalQuantityInput = document.getElementById('modal-quantity-input');
+                        
+                        modalQuantity.addEventListener('change', function() {
+                            modalQuantityInput.value = this.value;
+                        });
+                        
+                        modal.classList.remove('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching product details:', error);
+                    });
+            });
+        });
+        
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+        }
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endblock %} 

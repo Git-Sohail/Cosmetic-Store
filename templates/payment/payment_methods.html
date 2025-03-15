@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Select Payment Method - Cosmetics Store{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Select Payment Method</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+            <div class="space-y-2">
+                <p class="flex justify-between">
+                    <span>Order ID:</span>
+                    <span class="font-semibold">#{{ order.id }}</span>
+                </p>
+                <p class="flex justify-between">
+                    <span>Total Amount:</span>
+                    <span class="font-semibold">Rs. {{ order.total_price }}</span>
+                </p>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">Choose Payment Method</h2>
+                
+                <div class="space-y-4">
+                    <!-- eSewa Option -->
+                    <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="payment_method" value="esewa" class="h-4 w-4 text-indigo-600" required>
+                        <div class="ml-4">
+                            <div class="flex items-center">
+                                <img src="{% static 'images/esewa-logo.png' %}" alt="eSewa" class="h-8">
+                                <span class="ml-2 font-medium">eSewa</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">Pay using your eSewa wallet</p>
+                        </div>
+                    </label>
+
+                    <!-- Khalti Option -->
+                    <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="payment_method" value="khalti" class="h-4 w-4 text-indigo-600" required>
+                        <div class="ml-4">
+                            <div class="flex items-center">
+                                <img src="{% static 'images/khalti-logo.png' %}" alt="Khalti" class="h-8">
+                                <span class="ml-2 font-medium">Khalti</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">Pay using your Khalti wallet</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+                    Continue to Payment
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

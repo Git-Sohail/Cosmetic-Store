@@ -1,0 +1,184 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sales Overview -->
+    <div class="dashboard-section">
+        <h2>Sales Overview</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>Total Sales</h3>
+                <p>${{ total_sales|floatformat:2 }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Daily Sales</h3>
+                <p>${{ daily_sales|floatformat:2 }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar-week"></i>
+                <h3>Weekly Sales</h3>
+                <p>${{ weekly_sales|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Statistics -->
+    <div class="dashboard-section">
+        <h2>Product Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-box"></i>
+                <h3>Total Products</h3>
+                <p>{{ total_products }}</p>
+            </div>
+            <div class="stat-card warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Out of Stock</h3>
+                <p>{{ out_of_stock }}</p>
+            </div>
+            <div class="stat-card alert">
+                <i class="fas fa-battery-quarter"></i>
+                <h3>Low Stock</h3>
+                <p>{{ low_stock }}</p>
+            </div>
+        </div>
+
+        <!-- Top Selling Products -->
+        <div class="data-table">
+            <h3>Top Selling Products</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Units Sold</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in top_selling %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category.name }}</td>
+                        <td>{{ product.sold }}</td>
+                        <td>{{ product.stock }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Category Performance -->
+    <div class="dashboard-section">
+        <h2>Category Performance</h2>
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Products</th>
+                        <th>Total Sales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in category_sales %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.products_count }}</td>
+                        <td>${{ category.total_sales|default:0|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- User Statistics -->
+    <div class="dashboard-section">
+        <h2>User Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>Total Users</h3>
+                <p>{{ total_users }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-plus"></i>
+                <h3>New Users (Today)</h3>
+                <p>{{ new_users_today }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-clock"></i>
+                <h3>New Users (Week)</h3>
+                <p>{{ new_users_week }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-check"></i>
+                <h3>New Users (Month)</h3>
+                <p>{{ new_users_month }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Statistics -->
+    <div class="dashboard-section">
+        <h2>Newsletter Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Total Subscribers</h3>
+                <p>{{ total_subscribers }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-envelope-open"></i>
+                <h3>Active Subscribers</h3>
+                <p>{{ active_subscribers }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="dashboard-section">
+        <h2>Recent Orders</h2>
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.first_name }} {{ order.last_name }}</td>
+                        <td>${{ order.total_price|floatformat:2 }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

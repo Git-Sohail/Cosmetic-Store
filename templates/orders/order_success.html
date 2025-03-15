@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Order Confirmed - Cosmetics Store{% endblock %}
+
+{% block meta_description %}Thank you for your order! Your order has been successfully placed and is being processed.{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div class="text-center">
+            <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <h1 class="mt-4 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
+                Thank you for your order!
+            </h1>
+            <p class="mt-4 text-lg text-gray-500">
+                Your order #{{ order.id }} has been successfully placed and is being processed.
+            </p>
+        </div>
+
+        <div class="mt-8">
+            <div class="bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8">
+                <h2 class="text-lg font-medium text-gray-900">Order Summary</h2>
+                <dl class="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Order Number</dt>
+                        <dd class="mt-1 text-sm text-gray-900">#{{ order.id }}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Total Amount</dt>
+                        <dd class="mt-1 text-sm text-gray-900">${{ order.total_amount }}</dd>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-gray-500">Shipping Address</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ order.address }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <div class="flow-root">
+                <ul role="list" class="-my-6 divide-y divide-gray-200">
+                    {% for item in order.items.all %}
+                    <li class="py-6 flex">
+                        <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-center object-cover">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                    <span class="text-gray-400">No image</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="ml-4 flex-1 flex flex-col">
+                            <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h4>
+                                        <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                                    </h4>
+                                    <p class="ml-4">${{ item.get_cost }}</p>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Qty {{ item.quantity }}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-center space-x-4">
+            <a href="{% url 'orders:order_detail' order.id %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                View Order Details
+            </a>
+            <a href="{% url 'products:product_list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

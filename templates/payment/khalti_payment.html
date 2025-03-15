@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Khalti Payment - Cosmetics Store{% endblock %}
+
+{% block extra_head %}
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Khalti Payment</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+            <div class="space-y-2">
+                <p class="flex justify-between">
+                    <span>Order ID:</span>
+                    <span class="font-semibold">#{{ payment.order.id }}</span>
+                </p>
+                <p class="flex justify-between">
+                    <span>Total Amount:</span>
+                    <span class="font-semibold">Rs. {{ payment.amount }}</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="text-center">
+                <img src="{% static 'images/khalti-logo.png' %}" alt="Khalti" class="h-12 mx-auto mb-4">
+                <p class="text-gray-600 mb-6">Click the button below to pay with Khalti</p>
+                <button id="payment-button" class="bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    Pay with Khalti
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var config = {
+        "publicKey": "{{ khalti_public_key }}",
+        "productIdentity": "{{ payment.payment_id }}",
+        "productName": "Order #{{ payment.order.id }}",
+        "productUrl": "{{ request.build_absolute_uri }}",
+        "eventHandler": {
+            onSuccess: function(payload) {
+                // Send payment verification to backend
+                fetch("{% url 'payment:khalti_callback' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        payment_id: "{{ payment.payment_id }}",
+                        token: payload.token,
+                        amount: payload.amount,
+                        idx: payload.idx
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        window.location.href = "{% url 'orders:order_detail' payment.order.id %}";
+                    } else {
+                        alert('Payment verification failed. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            },
+            onError: function(error) {
+                console.error('Error:', error);
+                alert('Payment failed. Please try again.');
+            },
+            onClose: function() {
+                console.log('Widget closed');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function() {
+        checkout.show({amount: {{ payment.amount }} * 100}); // Convert to paisa
+    }
+</script>
+{% endblock %} 

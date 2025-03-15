@@ -1,0 +1,408 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ product.name }} - Cosmetics Store{% endblock %}
+
+{% block meta_description %}{{ product.description|truncatewords:25 }}{% endblock %}
+
+{% block meta_keywords %}{{ product.name }}, {{ product.category.name }}, cosmetics, beauty products{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumbs -->
+        <nav class="flex mb-8" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li>
+                    <a href="{% url 'products:product_list' %}" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-home"></i>
+                        <span class="sr-only">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 text-xs mx-2"></i>
+                        <a href="{% url 'products:product_list' %}" class="text-gray-400 hover:text-gray-500">Products</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 text-xs mx-2"></i>
+                        <a href="{{ product.category.get_absolute_url }}" class="text-gray-400 hover:text-gray-500">{{ product.category.name }}</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 text-xs mx-2"></i>
+                        <span class="text-gray-700">{{ product.name }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Product -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start" data-aos="fade-up">
+            <!-- Image gallery -->
+            <div class="flex flex-col">
+                <div class="overflow-hidden rounded-lg mb-4 bg-gray-100">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto object-center object-cover" id="main-product-image">
+                    {% else %}
+                    <div class="w-full h-96 flex items-center justify-center bg-gray-200">
+                        <span class="text-gray-400">No image available</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Thumbnail images (placeholder for multiple images) -->
+                <div class="grid grid-cols-4 gap-4">
+                    {% if product.image %}
+                    <div class="overflow-hidden rounded-lg bg-gray-100 cursor-pointer border-2 border-brand-500">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-24 object-center object-cover thumbnail-image">
+                    </div>
+                    {% endif %}
+                    <!-- Placeholder thumbnails -->
+                    <div class="overflow-hidden rounded-lg bg-gray-100 cursor-pointer">
+                        <div class="w-full h-24 flex items-center justify-center bg-gray-200">
+                            <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="overflow-hidden rounded-lg bg-gray-100 cursor-pointer">
+                        <div class="w-full h-24 flex items-center justify-center bg-gray-200">
+                            <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="overflow-hidden rounded-lg bg-gray-100 cursor-pointer">
+                        <div class="w-full h-24 flex items-center justify-center bg-gray-200">
+                            <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product info -->
+            <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
+                <div class="flex justify-between">
+                    <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">{{ product.name }}</h1>
+                    <button type="button" class="p-2 bg-white rounded-full shadow-md text-gray-400 hover:text-brand-500 transition-colors duration-200 wishlist-button">
+                        <i class="far fa-heart text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Reviews -->
+                <div class="mt-3">
+                    <div class="flex items-center">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="ml-2 text-sm text-gray-500">4.5 (24 reviews)</p>
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="mt-4">
+                    <p class="text-3xl text-brand-500 font-bold">${{ product.price }}</p>
+                    {% if product.stock <= 5 and product.stock > 0 %}
+                    <p class="mt-1 text-sm text-yellow-600">
+                        <i class="fas fa-exclamation-circle mr-1"></i>
+                        Only {{ product.stock }} left in stock - order soon
+                    </p>
+                    {% elif product.stock > 5 %}
+                    <p class="mt-1 text-sm text-green-600">
+                        <i class="fas fa-check-circle mr-1"></i>
+                        In Stock
+                    </p>
+                    {% else %}
+                    <p class="mt-1 text-sm text-red-600">
+                        <i class="fas fa-times-circle mr-1"></i>
+                        Out of Stock
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                <div class="mt-6">
+                    <h3 class="text-sm font-medium text-gray-900">Description</h3>
+                    <div class="mt-2 prose prose-sm text-gray-500">
+                        <p>{{ product.description }}</p>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="mt-8 border-t border-gray-200 pt-8">
+                    <!-- Add to cart form -->
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mt-6">
+                        {% csrf_token %}
+                        <input type="hidden" name="override" value="False">
+                        <div class="sm:flex sm:items-center">
+                            <div class="w-full sm:w-1/3 mb-4 sm:mb-0 sm:mr-4">
+                                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                <select id="quantity" name="quantity" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500">
+                                    {% for i in "12345"|make_list %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="w-full sm:w-2/3 flex space-x-2">
+                                <button type="submit" {% if product.stock == 0 %}disabled{% endif %} class="flex-1 bg-brand-500 border border-transparent rounded-md py-3 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}">
+                                    <i class="fas fa-shopping-bag mr-2"></i>
+                                    {% if product.stock > 0 %}Add to cart{% else %}Out of Stock{% endif %}
+                                </button>
+                                <button type="submit" formaction="{% url 'orders:buy_now' product.id %}" {% if product.stock == 0 %}disabled{% endif %} class="flex-1 bg-brand-600 border border-transparent rounded-md py-3 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-600 {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}">
+                                    <i class="fas fa-bolt mr-2"></i>
+                                    Buy Now
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Product details -->
+                <div class="mt-8">
+                    <div class="border-b border-gray-200">
+                        <div class="flex -mb-px">
+                            <button class="tab-button active py-4 px-1 border-b-2 border-brand-500 font-medium text-brand-600 whitespace-nowrap mr-8" data-tab="details">
+                                Product Details
+                            </button>
+                            <button class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap mr-8" data-tab="shipping">
+                                Shipping & Returns
+                            </button>
+                            <button class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap" data-tab="reviews">
+                                Reviews
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab content -->
+                    <div class="py-6">
+                        <div id="details-content" class="tab-content active">
+                            <div class="grid grid-cols-1 gap-y-4">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-sm font-medium text-gray-500">Category</div>
+                                    <div class="col-span-2 text-sm text-gray-900">{{ product.category.name }}</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-sm font-medium text-gray-500">Brand</div>
+                                    <div class="col-span-2 text-sm text-gray-900">Cosmetics Store</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-sm font-medium text-gray-500">Skin Type</div>
+                                    <div class="col-span-2 text-sm text-gray-900">All Skin Types</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-sm font-medium text-gray-500">Benefits</div>
+                                    <div class="col-span-2 text-sm text-gray-900">Hydrating, Long-lasting</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="shipping-content" class="tab-content hidden">
+                            <div class="prose prose-sm text-gray-500">
+                                <h4 class="text-gray-900">Shipping Information</h4>
+                                <p>We ship to all 50 states and international locations. Standard shipping takes 3-5 business days. Express shipping is available for an additional fee.</p>
+                                
+                                <h4 class="text-gray-900 mt-4">Return Policy</h4>
+                                <p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be unused and in original packaging.</p>
+                            </div>
+                        </div>
+                        <div id="reviews-content" class="tab-content hidden">
+                            <div class="space-y-6">
+                                <!-- Review 1 -->
+                                <div class="border-b border-gray-200 pb-6">
+                                    <div class="flex items-center mb-2">
+                                        <div class="flex text-yellow-400">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="ml-2 text-sm font-medium text-gray-900">Amazing product!</p>
+                                    </div>
+                                    <div class="flex items-center mb-2">
+                                        <p class="text-sm text-gray-500">Sarah J. - <span>March 15, 2024</span></p>
+                                    </div>
+                                    <div class="prose prose-sm text-gray-500">
+                                        <p>This product exceeded my expectations! The quality is amazing and it lasts all day. Will definitely purchase again.</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Review 2 -->
+                                <div class="border-b border-gray-200 pb-6">
+                                    <div class="flex items-center mb-2">
+                                        <div class="flex text-yellow-400">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <p class="ml-2 text-sm font-medium text-gray-900">Great value</p>
+                                    </div>
+                                    <div class="flex items-center mb-2">
+                                        <p class="text-sm text-gray-500">Michael T. - <span>February 28, 2024</span></p>
+                                    </div>
+                                    <div class="prose prose-sm text-gray-500">
+                                        <p>Good quality for the price. The packaging is beautiful and the product works well. Would recommend to friends.</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Add Review Form -->
+                                <div class="mt-8">
+                                    <h3 class="text-lg font-medium text-gray-900">Write a review</h3>
+                                    <form class="mt-4">
+                                        <div class="mb-4">
+                                            <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                                            <div class="flex text-2xl text-gray-400 rating-stars">
+                                                <i class="far fa-star cursor-pointer hover:text-yellow-400" data-rating="1"></i>
+                                                <i class="far fa-star cursor-pointer hover:text-yellow-400" data-rating="2"></i>
+                                                <i class="far fa-star cursor-pointer hover:text-yellow-400" data-rating="3"></i>
+                                                <i class="far fa-star cursor-pointer hover:text-yellow-400" data-rating="4"></i>
+                                                <i class="far fa-star cursor-pointer hover:text-yellow-400" data-rating="5"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="review-title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                            <input type="text" id="review-title" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="review-content" class="block text-sm font-medium text-gray-700 mb-1">Review</label>
+                                            <textarea id="review-content" rows="4" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"></textarea>
+                                        </div>
+                                        <button type="submit" class="bg-brand-500 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-white hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                                            Submit Review
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related products -->
+        <div class="mt-16 sm:mt-24" data-aos="fade-up">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">You may also like</h2>
+            <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
+                {% for related_product in related_products %}
+                <div class="group relative card-hover bg-white rounded-lg overflow-hidden shadow-sm">
+                    <div class="relative">
+                        <a href="{{ related_product.get_absolute_url }}" class="block">
+                            <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 overflow-hidden">
+                                {% if related_product.image %}
+                                    <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}" class="w-full h-full object-center object-cover group-hover:scale-105 transition-transform duration-500">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                        <span class="text-gray-400">No image</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if related_product.stock <= 5 and related_product.stock > 0 %}
+                            <span class="absolute top-2 left-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Only {{ related_product.stock }} left</span>
+                            {% endif %}
+                            {% if related_product.stock == 0 %}
+                            <span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Out of Stock</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <a href="{{ related_product.get_absolute_url }}" class="block">
+                            <h3 class="text-sm font-medium text-gray-700 group-hover:text-brand-500 transition-colors duration-200">
+                                {{ related_product.name }}
+                            </h3>
+                        </a>
+                        <p class="mt-1 text-lg font-semibold text-brand-500">${{ related_product.price }}</p>
+                        <form action="{% url 'cart:cart_add' related_product.id %}" method="post" class="mt-3">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="override" value="False">
+                            <button type="submit" {% if related_product.stock == 0 %}disabled{% endif %} class="w-full bg-brand-500 text-white py-2 px-4 rounded-md hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center {% if related_product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}">
+                                <i class="fas fa-shopping-bag mr-2"></i>
+                                {% if related_product.stock > 0 %}Add to Cart{% else %}Out of Stock{% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-500">No related products found.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Thumbnail image click functionality
+        document.querySelectorAll('.thumbnail-image').forEach(img => {
+            img.addEventListener('click', function() {
+                document.getElementById('main-product-image').src = this.src;
+                
+                // Update active thumbnail border
+                document.querySelectorAll('.thumbnail-image').forEach(thumb => {
+                    thumb.parentElement.classList.remove('border-2', 'border-brand-500');
+                });
+                this.parentElement.classList.add('border-2', 'border-brand-500');
+            });
+        });
+        
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active', 'border-brand-500', 'text-brand-600');
+                    btn.classList.add('border-transparent', 'text-gray-500');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Add active class to clicked button and show content
+                this.classList.add('active', 'border-brand-500', 'text-brand-600');
+                this.classList.remove('border-transparent', 'text-gray-500');
+                
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}-content`).classList.remove('hidden');
+            });
+        });
+        
+        // Rating stars functionality
+        document.querySelectorAll('.rating-stars i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                
+                // Update stars
+                document.querySelectorAll('.rating-stars i').forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas', 'text-yellow-400');
+                    } else {
+                        s.classList.remove('fas', 'text-yellow-400');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+        
+        // Wishlist button functionality
+        document.querySelector('.wishlist-button').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'text-brand-500');
+            } else {
+                icon.classList.remove('fas', 'text-brand-500');
+                icon.classList.add('far');
+            }
+        });
+    });
+</script>
+{% endblock %} 

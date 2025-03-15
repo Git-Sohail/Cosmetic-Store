@@ -1,0 +1,45 @@
+{% extends "email/base_email.html" %}
+
+{% block email_title %}Newsletter Issue Failed - Cosmetics Store{% endblock %}
+
+{% block email_header %}Newsletter Issue Failed to Send{% endblock %}
+
+{% block email_content %}
+<p>Dear Administrator,</p>
+
+<p>There was an error while trying to send the newsletter issue "{{ issue.title }}".</p>
+
+<div class="issue-details">
+    <p><strong>Issue Details:</strong></p>
+    <ul>
+        <li>Issue ID: {{ issue.id }}</li>
+        <li>Title: {{ issue.title }}</li>
+        <li>Attempted Date: {{ issue.last_attempt|date:"F j, Y, g:i a" }}</li>
+        <li>Error Message: {{ issue.error_message }}</li>
+    </ul>
+</div>
+
+<div class="error-details">
+    <p><strong>Error Details:</strong></p>
+    <pre class="error-message">{{ issue.error_traceback }}</pre>
+</div>
+
+<div class="admin-actions">
+    <p><strong>Admin Actions:</strong></p>
+    <ul>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_change' issue.id %}">View Issue</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_retry' issue.id %}">Retry Sending</a></li>
+        <li><a href="{{ protocol }}://{{ domain }}{% url 'admin:newsletter_newsletterissue_list' %}">View All Issues</a></li>
+    </ul>
+</div>
+
+<p>Please check the error details and take appropriate action. If the issue persists, you may need to:</p>
+<ul>
+    <li>Check your email server configuration</li>
+    <li>Verify your email service provider's status</li>
+    <li>Review the error logs for more details</li>
+    <li>Contact technical support if needed</li>
+</ul>
+
+<p>Thank you for your attention to this matter.</p>
+{% endblock %} 
