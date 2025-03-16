@@ -6,80 +6,117 @@
 
 {% block content %}
 <div class="bg-white">
-    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 class="text-2xl font-extrabold text-gray-900 mb-8">My Orders</h1>
+    <div class="max-w-2xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div class="border-b border-gray-200 pb-5 mb-8">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-extrabold text-gray-900">Order History</h1>
+                {% if orders %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-100 text-brand-800">
+                        {{ orders|length }} order{% if orders|length != 1 %}s{% endif %}
+                    </span>
+                {% endif %}
+            </div>
+            <p class="mt-2 text-sm text-gray-500">View and track all your previous purchases.</p>
+        </div>
 
         {% if orders %}
-            <div class="mt-8">
-                <div class="flow-root">
-                    <ul role="list" class="-my-6 divide-y divide-gray-200">
-                        {% for order in orders %}
-                        <li class="py-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="text-lg font-medium text-gray-900">
-                                        Order #{{ order.id }}
-                                    </h3>
-                                    <p class="mt-1 text-sm text-gray-500">
-                                        Placed on {{ order.created_at|date:"F j, Y" }}
-                                    </p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-medium text-gray-900">${{ order.total_amount }}</p>
-                                    <p class="mt-1 text-sm text-gray-500">
-                                        Status: <span class="capitalize">{{ order.status }}</span>
-                                    </p>
-                                </div>
+            <div class="mt-8 space-y-8">
+                {% for order in orders %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                                    Order #{{ order.id }}
+                                    {% if order.status == 'completed' %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
+                                                <circle cx="4" cy="4" r="3" />
+                                            </svg>
+                                            Completed
+                                        </span>
+                                    {% elif order.status == 'processing' %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-blue-400" fill="currentColor" viewBox="0 0 8 8">
+                                                <circle cx="4" cy="4" r="3" />
+                                            </svg>
+                                            Processing
+                                        </span>
+                                    {% elif order.status == 'shipped' %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                            <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-purple-400" fill="currentColor" viewBox="0 0 8 8">
+                                                <circle cx="4" cy="4" r="3" />
+                                            </svg>
+                                            Shipped
+                                        </span>
+                                    {% else %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-gray-400" fill="currentColor" viewBox="0 0 8 8">
+                                                <circle cx="4" cy="4" r="3" />
+                                            </svg>
+                                            {{ order.status|title }}
+                                        </span>
+                                    {% endif %}
+                                </h3>
+                                <p class="mt-1 text-sm text-gray-500 flex items-center">
+                                    <svg class="mr-1.5 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                    </svg>
+                                    Placed on {{ order.created_at|date:"F j, Y" }}
+                                </p>
                             </div>
+                            <div class="mt-2 sm:mt-0">
+                                <p class="text-lg font-medium text-brand-600">Rs. {{ order.total_amount }}</p>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="mt-6">
-                                <div class="flow-root">
-                                    <ul role="list" class="-my-6 divide-y divide-gray-200">
-                                        {% for item in order.items.all %}
-                                        <li class="py-6 flex">
-                                            <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-                                                {% if item.product.image %}
-                                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-center object-cover">
-                                                {% else %}
-                                                    <div class="w-full h-full flex items-center justify-center bg-gray-100">
-                                                        <span class="text-gray-400">No image</span>
-                                                    </div>
-                                                {% endif %}
+                    <div class="px-6 py-4">
+                        <div class="flow-root">
+                            <ul role="list" class="-my-5 divide-y divide-gray-200">
+                                {% for item in order.items.all %}
+                                <li class="py-5 flex">
+                                    <div class="flex-shrink-0 w-16 h-16 border border-gray-200 rounded-md overflow-hidden">
+                                        {% if item.product.image %}
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-center object-cover">
+                                        {% else %}
+                                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                                <span class="text-gray-400">No image</span>
                                             </div>
+                                        {% endif %}
+                                    </div>
 
-                                            <div class="ml-4 flex-1 flex flex-col">
-                                                <div>
-                                                    <div class="flex justify-between text-base font-medium text-gray-900">
-                                                        <h4>
-                                                            <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
-                                                        </h4>
-                                                        <p class="ml-4">${{ item.get_cost }}</p>
-                                                    </div>
-                                                    <p class="mt-1 text-sm text-gray-500">Qty {{ item.quantity }}</p>
-                                                </div>
+                                    <div class="ml-4 flex-1 flex flex-col">
+                                        <div>
+                                            <div class="flex justify-between text-sm font-medium text-gray-900">
+                                                <h4>
+                                                    <a href="{{ item.product.get_absolute_url }}" class="hover:text-brand-600">{{ item.product.name }}</a>
+                                                </h4>
+                                                <p class="ml-4">Rs. {{ item.get_cost }}</p>
                                             </div>
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
+                                            <p class="mt-1 text-sm text-gray-500">Qty {{ item.quantity }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
 
-                            <div class="mt-6">
-                                <div class="flex justify-between text-sm">
-                                    <div>
-                                        <p class="text-gray-500">Shipping Address:</p>
-                                        <p class="mt-1 text-gray-900">{{ order.address }}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-gray-500">Contact:</p>
-                                        <p class="mt-1 text-gray-900">{{ order.phone }}</p>
-                                    </div>
-                                </div>
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                        <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-6">
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Shipping Address</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ order.address }}</dd>
                             </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Contact</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ order.phone }}</dd>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
 
             {% if is_paginated %}
@@ -96,7 +133,7 @@
 
                     {% for num in page_obj.paginator.page_range %}
                         {% if page_obj.number == num %}
-                        <span class="relative inline-flex items-center px-4 py-2 border border-pink-500 bg-pink-50 text-sm font-medium text-pink-600">
+                        <span class="relative inline-flex items-center px-4 py-2 border border-brand-500 bg-brand-50 text-sm font-medium text-brand-600">
                             {{ num }}
                         </span>
                         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
@@ -118,16 +155,20 @@
             </div>
             {% endif %}
         {% else %}
-            <div class="text-center py-12">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
-                <p class="mt-1 text-sm text-gray-500">Get started by adding some products to your cart.</p>
-                <div class="mt-6">
-                    <a href="{% url 'products:product_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                        Start Shopping
-                    </a>
+            <div class="text-center py-16 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div class="p-6 max-w-sm mx-auto">
+                    <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-brand-100">
+                        <svg class="h-10 w-10 text-brand-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-6 text-lg font-medium text-gray-900">No orders yet</h3>
+                    <p class="mt-2 text-sm text-gray-500">You haven't made any purchases yet. Start exploring our products to find something you'll love!</p>
+                    <div class="mt-6">
+                        <a href="{% url 'products:product_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                            Browse Products
+                        </a>
+                    </div>
                 </div>
             </div>
         {% endif %}
