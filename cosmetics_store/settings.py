@@ -42,12 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     
     # Third party apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'crispy_forms',
     'crispy_tailwind',
     'django_filters',
@@ -69,7 +65,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'cosmetics_store.urls'
@@ -154,6 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
 AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'products:product_list'
 LOGOUT_REDIRECT_URL = 'products:product_list'
 
@@ -163,12 +159,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
-
-# AllAuth settings
-SITE_ID = 1
-ACCOUNT_LOGIN_METHODS = {'username'}
-ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Cart settings
 CART_SESSION_ID = 'cart'
