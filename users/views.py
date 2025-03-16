@@ -22,11 +22,25 @@ class SignUpView(CreateView):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user)
+        # Check if the user wants to remove their profile picture
+        if 'remove_profile_picture' in request.POST:
+            if request.user.profile_picture:
+                # Delete the profile picture
+                request.user.profile_picture.delete(save=True)
+                messages.success(request, 'Profile picture removed successfully!')
+            return redirect('users:profile')
+            
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated successfully!')
             return redirect('users:profile')
+        else:
+            # Add debug messages for form errors
+            messages.error(request, 'Error updating profile. Please check the form.')
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'users/profile.html', {'form': form})

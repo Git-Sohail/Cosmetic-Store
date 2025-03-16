@@ -7,53 +7,181 @@
 {% block content %}
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:grid md:grid-cols-3 md:gap-8">
+            <!-- Profile Sidebar -->
             <div class="md:col-span-1">
-                <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Profile Information</h3>
-                    <p class="mt-1 text-sm text-gray-600">
-                        Update your personal information and preferences.
-                    </p>
+                <div class="bg-white shadow rounded-lg p-6 mb-6">
+                    <div class="flex flex-col items-center">
+                        <div class="relative mb-4">
+                            {% if user.profile_picture %}
+                                <div class="relative">
+                                    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="h-32 w-32 rounded-full object-cover border-4 border-white shadow cursor-pointer" id="profile-image">
+                                    <button type="button" id="profile-menu-button" class="absolute inset-0 w-full h-full rounded-full bg-transparent cursor-pointer">
+                                        <span class="sr-only">Open profile menu</span>
+                                    </button>
+                                </div>
+                            {% else %}
+                                <div class="relative">
+                                    <div class="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-white shadow cursor-pointer" id="profile-image">
+                                        <span class="text-4xl text-gray-400">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</span>
+                                    </div>
+                                    <button type="button" id="profile-menu-button" class="absolute inset-0 w-full h-full rounded-full bg-transparent cursor-pointer">
+                                        <span class="sr-only">Open profile menu</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Profile Picture Menu (Hidden by default) -->
+                            <div id="profile-menu" class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-md shadow-lg z-50" style="pointer-events: auto;">
+                                <div class="py-1">
+                                    {% if user.profile_picture %}
+                                    <a href="{{ user.profile_picture.url }}" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-eye mr-2"></i> View Photo
+                                    </a>
+                                    {% endif %}
+                                    <label for="direct-file-upload" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                        <i class="fas fa-upload mr-2"></i> Change Photo
+                                    </label>
+                                    {% if user.profile_picture %}
+                                    <button type="button" id="remove-photo-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                        <i class="fas fa-trash-alt mr-2"></i> Remove Photo
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden direct file upload input -->
+                            <form id="direct-upload-form" method="post" enctype="multipart/form-data" class="hidden">
+                                {% csrf_token %}
+                                <input type="file" id="direct-file-upload" name="profile_picture" class="hidden" accept="image/*">
+                            </form>
+                        </div>
+                        
+                        <h3 class="text-xl font-medium text-gray-900">{{ user.get_full_name }}</h3>
+                        <p class="text-sm text-gray-500 mb-4">{{ user.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Account Settings</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="{% url 'users:password_change' %}" class="flex items-center text-sm text-gray-700 hover:text-indigo-600">
+                                <i class="fas fa-key mr-3 text-gray-400"></i>
+                                Change Password
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center text-sm text-gray-700 hover:text-indigo-600">
+                                <i class="fas fa-bell mr-3 text-gray-400"></i>
+                                Notification Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center text-sm text-gray-700 hover:text-indigo-600">
+                                <i class="fas fa-history mr-3 text-gray-400"></i>
+                                Order History
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
+            
+            <!-- Profile Form -->
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data" id="profile-form">
                     {% csrf_token %}
                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900">Personal Information</h3>
+                                <p class="mt-1 text-sm text-gray-500">Update your personal information and contact details.</p>
+                            </div>
+                            
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="first_name" class="block text-sm font-medium text-gray-700">First name</label>
-                                    <input type="text" name="first_name" id="first_name" value="{{ form.first_name.value|default:'' }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">First name</label>
+                                    {{ form.first_name }}
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="last_name" class="block text-sm font-medium text-gray-700">Last name</label>
-                                    <input type="text" name="last_name" id="last_name" value="{{ form.last_name.value|default:'' }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Last name</label>
+                                    {{ form.last_name }}
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-4">
-                                    <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-                                    <input type="email" name="email" id="email" value="{{ form.email.value|default:'' }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email address</label>
+                                    {{ form.email }}
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-4">
-                                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone number</label>
-                                    <input type="tel" name="phone" id="phone" value="{{ form.phone.value|default:'' }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700">Phone number</label>
+                                    {{ form.phone_number }}
                                 </div>
 
                                 <div class="col-span-6">
-                                    <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                    <input type="text" name="address" id="address" value="{{ form.address.value|default:'' }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700">Address</label>
+                                    {{ form.address }}
                                 </div>
+                                
+                                <!-- Hidden field for username and profile picture -->
+                                {{ form.username.as_hidden }}
+                                
+                                <!-- Display form errors if any -->
+                                {% if form.errors %}
+                                <div class="col-span-6">
+                                    <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                                        <div class="flex">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-exclamation-circle text-red-400"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm text-red-700">
+                                                    Please correct the errors below.
+                                                </p>
+                                                <ul class="list-disc pl-5 text-sm text-red-700">
+                                                    {% for field in form %}
+                                                        {% for error in field.errors %}
+                                                            <li>{{ field.label }}: {{ error }}</li>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Display success messages -->
+                                {% if messages %}
+                                <div class="col-span-6">
+                                    {% for message in messages %}
+                                        <div class="{% if message.tags == 'success' %}bg-green-50 border-l-4 border-green-400{% elif message.tags == 'error' %}bg-red-50 border-l-4 border-red-400{% else %}bg-blue-50 border-l-4 border-blue-400{% endif %} p-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    {% if message.tags == 'success' %}
+                                                        <i class="fas fa-check-circle text-green-400"></i>
+                                                    {% elif message.tags == 'error' %}
+                                                        <i class="fas fa-exclamation-circle text-red-400"></i>
+                                                    {% else %}
+                                                        <i class="fas fa-info-circle text-blue-400"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm {% if message.tags == 'success' %}text-green-700{% elif message.tags == 'error' %}text-red-700{% else %}text-blue-700{% endif %}">
+                                                        {{ message }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <a href="{% url 'users:password_change' %}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3">
-                                Change Password
-                            </a>
                             <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Save
+                                Save Changes
                             </button>
                         </div>
                     </div>
@@ -62,4 +190,120 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get DOM elements
+        const profileMenuButton = document.getElementById('profile-menu-button');
+        const profileMenu = document.getElementById('profile-menu');
+        const removePhotoBtn = document.getElementById('remove-photo-btn');
+        const directFileUpload = document.getElementById('direct-file-upload');
+        const directUploadForm = document.getElementById('direct-upload-form');
+        const profileForm = document.getElementById('profile-form');
+        
+        // Debug logging
+        console.log('DOM Content Loaded');
+        console.log('Profile Menu Button:', profileMenuButton);
+        console.log('Profile Menu:', profileMenu);
+        
+        // Toggle profile menu when clicking on profile menu button
+        if (profileMenuButton) {
+            console.log('Adding click event listener to profile menu button');
+            
+            profileMenuButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Profile menu button clicked!');
+                
+                // Force show the menu
+                profileMenu.classList.remove('hidden');
+                console.log('Menu shown');
+                
+                // Add a direct style to ensure visibility
+                profileMenu.style.display = 'block';
+            });
+        }
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (profileMenu && !profileMenu.contains(e.target) && e.target !== profileMenuButton) {
+                profileMenu.classList.add('hidden');
+                profileMenu.style.display = 'none';
+            }
+        });
+        
+        // Handle direct file upload
+        if (directFileUpload) {
+            directFileUpload.addEventListener('change', function(e) {
+                console.log('File selected:', this.files[0]?.name);
+                if (this.files.length > 0) {
+                    // Show loading indicator or message
+                    const loadingMessage = document.createElement('div');
+                    loadingMessage.className = 'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
+                    loadingMessage.innerHTML = '<div class="bg-white p-4 rounded-lg shadow-lg"><p class="text-gray-700">Uploading profile picture...</p></div>';
+                    document.body.appendChild(loadingMessage);
+                    
+                    // Create a form data object
+                    const formData = new FormData(directUploadForm);
+                    
+                    // Add hidden fields from the profile form
+                    const hiddenFields = document.querySelectorAll('#profile-form input[type="hidden"]');
+                    hiddenFields.forEach(field => {
+                        if (field.name !== 'profile_picture') {
+                            formData.append(field.name, field.value);
+                        }
+                    });
+                    
+                    // Submit the form
+                    directUploadForm.submit();
+                }
+            });
+        }
+        
+        // Handle remove photo button
+        if (removePhotoBtn) {
+            removePhotoBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Remove photo button clicked');
+                if (confirm('Are you sure you want to remove your profile picture?')) {
+                    // Create a form to submit the remove request
+                    const removeForm = document.createElement('form');
+                    removeForm.method = 'post';
+                    removeForm.action = window.location.href;
+                    
+                    // Add CSRF token
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = csrfToken;
+                    removeForm.appendChild(csrfInput);
+                    
+                    // Add a field to indicate we want to remove the photo
+                    const removeField = document.createElement('input');
+                    removeField.type = 'hidden';
+                    removeField.name = 'remove_profile_picture';
+                    removeField.value = 'true';
+                    removeForm.appendChild(removeField);
+                    
+                    // Add hidden fields to preserve other form data
+                    const hiddenFields = document.querySelectorAll('#profile-form input[type="hidden"]');
+                    hiddenFields.forEach(field => {
+                        if (field.name !== 'profile_picture') {
+                            const clone = field.cloneNode(true);
+                            removeForm.appendChild(clone);
+                        }
+                    });
+                    
+                    // Submit the form
+                    document.body.appendChild(removeForm);
+                    removeForm.submit();
+                }
+            });
+        }
+    });
+</script>
 {% endblock %} 
