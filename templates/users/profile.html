@@ -39,9 +39,14 @@
                                         <i class="fas fa-eye mr-2"></i> View Photo
                                     </a>
                                     {% endif %}
-                                    <label for="direct-file-upload" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
-                                        <i class="fas fa-upload mr-2"></i> Change Photo
-                                    </label>
+                                    <div class="relative">
+                                        <label for="direct-file-upload" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                            <i class="fas fa-upload mr-2"></i> Change Photo
+                                        </label>
+                                        <div class="hidden absolute top-0 right-0 transform translate-x-full mt-0 w-48 bg-white rounded-md shadow-lg z-50 p-2 text-xs text-gray-500" id="file-type-info">
+                                            Supported formats: JPG, JPEG, PNG
+                                        </div>
+                                    </div>
                                     {% if user.profile_picture %}
                                     <button type="button" id="remove-photo-btn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
                                         <i class="fas fa-trash-alt mr-2"></i> Remove Photo
@@ -53,7 +58,14 @@
                             <!-- Hidden direct file upload input -->
                             <form id="direct-upload-form" method="post" enctype="multipart/form-data" class="hidden">
                                 {% csrf_token %}
-                                <input type="file" id="direct-file-upload" name="profile_picture" class="hidden" accept="image/*">
+                                <input type="file" id="direct-file-upload" name="profile_picture" class="hidden" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+                                <!-- Include required fields -->
+                                <input type="hidden" name="username" value="{{ user.username }}">
+                                <input type="hidden" name="email" value="{{ user.email }}">
+                                <input type="hidden" name="first_name" value="{{ user.first_name }}">
+                                <input type="hidden" name="last_name" value="{{ user.last_name }}">
+                                <input type="hidden" name="phone_number" value="{{ user.phone_number|default:'' }}">
+                                <input type="hidden" name="address" value="{{ user.address|default:'' }}">
                             </form>
                         </div>
                         
@@ -124,7 +136,7 @@
                                     {{ form.address }}
                                 </div>
                                 
-                                <!-- Hidden field for username and profile picture -->
+                                <!-- Hidden field for username -->
                                 {{ form.username.as_hidden }}
                                 
                                 <!-- Display form errors if any -->
@@ -202,6 +214,8 @@
         const directFileUpload = document.getElementById('direct-file-upload');
         const directUploadForm = document.getElementById('direct-upload-form');
         const profileForm = document.getElementById('profile-form');
+        const fileTypeInfo = document.getElementById('file-type-info');
+        const changePhotoLabel = document.querySelector('label[for="direct-file-upload"]');
         
         // Debug logging
         console.log('DOM Content Loaded');
@@ -226,6 +240,17 @@
             });
         }
         
+        // Show file type info on hover
+        if (changePhotoLabel && fileTypeInfo) {
+            changePhotoLabel.addEventListener('mouseenter', function() {
+                fileTypeInfo.classList.remove('hidden');
+            });
+            
+            changePhotoLabel.addEventListener('mouseleave', function() {
+                fileTypeInfo.classList.add('hidden');
+            });
+        }
+        
         // Close menu when clicking outside
         document.addEventListener('click', function(e) {
             if (profileMenu && !profileMenu.contains(e.target) && e.target !== profileMenuButton) {
@@ -239,24 +264,30 @@
             directFileUpload.addEventListener('change', function(e) {
                 console.log('File selected:', this.files[0]?.name);
                 if (this.files.length > 0) {
+                    const file = this.files[0];
+                    const fileType = file.type.toLowerCase();
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                    
+                    if (!validTypes.includes(fileType)) {
+                        alert('Please select a valid image file (JPG, JPEG, or PNG)');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Check file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Image file size must be less than 5MB');
+                        this.value = '';
+                        return;
+                    }
+                    
                     // Show loading indicator or message
                     const loadingMessage = document.createElement('div');
                     loadingMessage.className = 'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
                     loadingMessage.innerHTML = '<div class="bg-white p-4 rounded-lg shadow-lg"><p class="text-gray-700">Uploading profile picture...</p></div>';
                     document.body.appendChild(loadingMessage);
                     
-                    // Create a form data object
-                    const formData = new FormData(directUploadForm);
-                    
-                    // Add hidden fields from the profile form
-                    const hiddenFields = document.querySelectorAll('#profile-form input[type="hidden"]');
-                    hiddenFields.forEach(field => {
-                        if (field.name !== 'profile_picture') {
-                            formData.append(field.name, field.value);
-                        }
-                    });
-                    
-                    // Submit the form
+                    // Submit the form directly - all required fields are already included as hidden inputs
                     directUploadForm.submit();
                 }
             });
@@ -289,14 +320,42 @@
                     removeField.value = 'true';
                     removeForm.appendChild(removeField);
                     
-                    // Add hidden fields to preserve other form data
-                    const hiddenFields = document.querySelectorAll('#profile-form input[type="hidden"]');
-                    hiddenFields.forEach(field => {
-                        if (field.name !== 'profile_picture') {
-                            const clone = field.cloneNode(true);
-                            removeForm.appendChild(clone);
-                        }
-                    });
+                    // Add required fields
+                    const usernameField = document.createElement('input');
+                    usernameField.type = 'hidden';
+                    usernameField.name = 'username';
+                    usernameField.value = '{{ user.username }}';
+                    removeForm.appendChild(usernameField);
+                    
+                    const emailField = document.createElement('input');
+                    emailField.type = 'hidden';
+                    emailField.name = 'email';
+                    emailField.value = '{{ user.email }}';
+                    removeForm.appendChild(emailField);
+                    
+                    const firstNameField = document.createElement('input');
+                    firstNameField.type = 'hidden';
+                    firstNameField.name = 'first_name';
+                    firstNameField.value = '{{ user.first_name }}';
+                    removeForm.appendChild(firstNameField);
+                    
+                    const lastNameField = document.createElement('input');
+                    lastNameField.type = 'hidden';
+                    lastNameField.name = 'last_name';
+                    lastNameField.value = '{{ user.last_name }}';
+                    removeForm.appendChild(lastNameField);
+                    
+                    const phoneField = document.createElement('input');
+                    phoneField.type = 'hidden';
+                    phoneField.name = 'phone_number';
+                    phoneField.value = '{{ user.phone_number|default:"" }}';
+                    removeForm.appendChild(phoneField);
+                    
+                    const addressField = document.createElement('input');
+                    addressField.type = 'hidden';
+                    addressField.name = 'address';
+                    addressField.value = '{{ user.address|default:"" }}';
+                    removeForm.appendChild(addressField);
                     
                     // Submit the form
                     document.body.appendChild(removeForm);
