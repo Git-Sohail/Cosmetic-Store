@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Login - Cosmetics Store{% endblock %}
 
@@ -24,16 +25,16 @@
             <div class="mt-8">
                 <div class="flex justify-center space-x-8 mb-8">
                     <div class="text-center card-hover">
-                        <div class="text-3xl font-bold text-brand-500">1000+</div>
-                        <div class="text-sm text-gray-500 mt-1">Happy Customers</div>
+                        <div class="text-3xl font-bold text-brand-500">Free</div>
+                        <div class="text-sm text-gray-500 mt-1">Shipping</div>
                     </div>
                     <div class="text-center card-hover">
-                        <div class="text-3xl font-bold text-brand-500">500+</div>
-                        <div class="text-sm text-gray-500 mt-1">Products</div>
+                        <div class="text-3xl font-bold text-brand-500">100%</div>
+                        <div class="text-sm text-gray-500 mt-1">Authentic</div>
                     </div>
                     <div class="text-center card-hover">
-                        <div class="text-3xl font-bold text-brand-500">24/7</div>
-                        <div class="text-sm text-gray-500 mt-1">Support</div>
+                        <div class="text-3xl font-bold text-brand-500">Secure</div>
+                        <div class="text-sm text-gray-500 mt-1">Shopping</div>
                     </div>
                 </div>
             </div>
@@ -61,32 +62,53 @@
                 </div>
                 {% endif %}
 
+                {% if form.errors %}
+                <div class="mb-6">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <div class="rounded-md bg-red-50 border-red-200 p-4 border animate-fade-in">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-circle text-red-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">
+                                        {{ field.label }}: {{ error }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 <div class="space-y-5">
+                    <!-- Username field -->
                     <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                        <div class="relative rounded-md shadow-sm">
+                        <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <div class="relative rounded-md shadow-sm group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-user text-brand-500"></i>
                             </div>
-                            <input id="username" name="username" type="text" required 
-                                class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg 
-                                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 
-                                       focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" 
-                                placeholder="Enter your username">
+                            {% render_field form.username class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Enter your username" %}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                Enter your account username
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Password field -->
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <div class="relative rounded-md shadow-sm">
+                        <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative rounded-md shadow-sm group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-brand-500"></i>
                             </div>
-                            <input id="password" name="password" type="password" required 
-                                class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg 
-                                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 
-                                       focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" 
-                                placeholder="Enter your password">
+                            {% render_field form.password class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Enter your password" %}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                Enter your account password
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -198,12 +220,57 @@
     }
 
     /* Add hover effect to social proof numbers */
-    .text-3xl {
-        transition: transform 0.2s ease;
+    .card-hover {
+        transition: all 0.3s ease;
     }
 
-    .text-3xl:hover {
-        transform: scale(1.1);
+    .card-hover:hover {
+        transform: translateY(-5px);
+    }
+
+    .text-gradient {
+        background: linear-gradient(45deg, #ff3366, #ff9fb3);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(45deg, #ff3366, #ff9fb3);
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(45deg, #ff1a4d, #ff8ca6);
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.5s ease-out;
+    }
+
+    @keyframes slide-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-slide-up {
+        animation: slide-up 0.8s ease-out;
     }
 </style>
 {% endblock %}

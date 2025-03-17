@@ -24,7 +24,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', RedirectView.as_view(pattern_name='products:product_list'), name='home'),
     path('', include('products.urls')),
+    path('users/', include('users.urls')),
     path('cart/', include('cart.urls')),
     path('orders/', include('orders.urls')),
-    path('', include('users.urls')),  # Changed to root path to handle all auth URLs
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

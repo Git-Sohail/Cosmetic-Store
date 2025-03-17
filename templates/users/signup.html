@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Sign Up - Cosmetics Store{% endblock %}
 
@@ -90,7 +91,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-user text-brand-500"></i>
                             </div>
-                            {{ form.username }}
+                            {% render_field form.username class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Choose a username" %}
                             <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
                                 Choose a unique username for your account
                             </div>
@@ -104,7 +105,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-brand-500"></i>
                             </div>
-                            {{ form.email }}
+                            {% render_field form.email class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Enter your email" %}
                             <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
                                 We'll use this email for order confirmations
                             </div>
@@ -119,7 +120,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-user-circle text-brand-500"></i>
                                 </div>
-                                {{ form.first_name }}
+                                {% render_field form.first_name class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="First name" %}
                             </div>
                         </div>
 
@@ -129,7 +130,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-user-circle text-brand-500"></i>
                                 </div>
-                                {{ form.last_name }}
+                                {% render_field form.last_name class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Last name" %}
                             </div>
                         </div>
                     </div>
@@ -141,7 +142,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-phone text-brand-500"></i>
                             </div>
-                            {{ form.phone_number }}
+                            {% render_field form.phone_number class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Enter your phone number" %}
                             <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
                                 For delivery updates and notifications
                             </div>
@@ -155,7 +156,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-map-marker-alt text-brand-500"></i>
                             </div>
-                            {{ form.address }}
+                            {% render_field form.address class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Enter your address" %}
                             <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
                                 Your shipping address for delivery
                             </div>
@@ -169,7 +170,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-brand-500"></i>
                             </div>
-                            {{ form.password1 }}
+                            {% render_field form.password1 class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Create a password" %}
                             <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
                                 Choose a strong password
                             </div>
@@ -183,14 +184,11 @@
 
                     <div>
                         <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
-                        <div class="relative rounded-md shadow-sm group">
+                        <div class="relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-brand-500"></i>
                             </div>
-                            {{ form.password2 }}
-                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
-                                Re-enter your password to confirm
-                            </div>
+                            {% render_field form.password2 class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm" placeholder="Confirm your password" %}
                         </div>
                     </div>
                 </div>
@@ -204,7 +202,7 @@
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <i class="fas fa-user-plus text-brand-300 group-hover:text-brand-200"></i>
                         </span>
-                        Sign Up
+                        Create Account
                     </button>
                 </div>
 
@@ -213,7 +211,7 @@
                         Already have an account?
                         <a href="{% url 'users:login' %}" 
                             class="font-medium text-brand-600 hover:text-brand-500 transition duration-150 ease-in-out ml-1">
-                            Sign in
+                            Sign in here
                         </a>
                     </p>
                 </div>
@@ -226,8 +224,8 @@
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: linear-gradient(to bottom right, rgba(255, 51, 102, 0.9), rgba(255, 159, 179, 0.9));">
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center text-white p-8 max-w-lg animate-slide-up">
-                    <h2 class="text-5xl font-serif font-bold mb-6">Join Our Family</h2>
-                    <p class="text-xl leading-relaxed">Experience the best in beauty with our premium cosmetics collection</p>
+                    <h2 class="text-5xl font-serif font-bold mb-6">Discover Beauty</h2>
+                    <p class="text-xl leading-relaxed">Your one-stop destination for premium cosmetics and beauty products</p>
                 </div>
             </div>
         </div>
@@ -274,12 +272,12 @@
     }
 
     /* Add a subtle animation to form inputs */
-    input, textarea {
+    input {
         transform: translateY(0);
         transition: all 0.2s ease;
     }
 
-    input:focus, textarea:focus {
+    input:focus {
         transform: translateY(-2px);
     }
 
@@ -293,14 +291,18 @@
     }
 
     .text-gradient {
-        background: linear-gradient(to right, #ff3366, #ff9fb3);
+        background: linear-gradient(45deg, #ff3366, #ff9fb3);
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .btn-gradient {
-        background: linear-gradient(to right, #ff3366, #ff9fb3);
+        background: linear-gradient(45deg, #ff3366, #ff9fb3);
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(45deg, #ff1a4d, #ff8ca6);
     }
 
     @keyframes fade-in {
@@ -314,6 +316,10 @@
         }
     }
 
+    .animate-fade-in {
+        animation: fade-in 0.5s ease-out;
+    }
+
     @keyframes slide-up {
         from {
             opacity: 0;
@@ -323,10 +329,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-    }
-
-    .animate-fade-in {
-        animation: fade-in 0.5s ease-out;
     }
 
     .animate-slide-up {

@@ -1,6 +1,25 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from .models import User
+
+class CustomLoginForm(AuthenticationForm):
+    """Custom login form with enhanced styling and validation."""
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add common classes to all fields
+        common_classes = 'appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm'
+        
+        self.fields['username'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Enter your username'
+        })
+        self.fields['password'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Enter your password'
+        })
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -11,8 +30,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'phone_number',  raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
-django.template.exceptions.TemplateSyntaxError: Invalid filter: 'add_class' 'address', 'password1', 'password2')
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -67,4 +85,4 @@ class CustomUserChangeForm(UserChangeForm):
             'phone_number': forms.TextInput(attrs={'class': 'mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md'}),
             'address': forms.Textarea(attrs={'class': 'mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md', 'rows': 3}),
             'profile_picture': forms.FileInput(attrs={'class': 'mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md'}),
-        } 
+        }

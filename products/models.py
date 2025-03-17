@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -25,14 +26,19 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('products:category_detail', args=[self.slug])
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200)
-    image = models.ImageField(upload_to='products/%Y/%m/%d/')
+    slug = models.SlugField(max_length=200, unique=True)
+    image = models.ImageField(upload_to='products/%Y/%m/%d/', blank=True)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    stock = models.PositiveIntegerField(default=0)
     available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -60,6 +66,11 @@ class Product(models.Model):
         if self.image:
             return self.image.url
         return '/static/images/no-image.png'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def get_average_rating(self):
         reviews = self.reviews.all()

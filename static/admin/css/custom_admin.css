@@ -1,0 +1,184 @@
+/* Custom Admin Theme */
+:root {
+    --primary-color: #ff3366;
+    --primary-light: #ff9fb3;
+    --secondary-color: #2c3e50;
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+    --danger-color: #e74c3c;
+}
+
+/* Header Styling */
+#header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+}
+
+#header a:link, #header a:visited {
+    color: white;
+}
+
+/* Branding */
+#branding h1 {
+    font-weight: 600;
+}
+
+/* Content Area */
+#content {
+    padding: 20px;
+}
+
+.module h2, .module caption {
+    background: var(--secondary-color);
+    color: white;
+}
+
+/* List View */
+#changelist .results {
+    margin-right: 280px;
+    width: auto;
+}
+
+#changelist-filter {
+    background: white;
+    border-left: 1px solid #ddd;
+}
+
+/* Form Styling */
+.form-row {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-row img {
+    max-width: 100%;
+    height: auto;
+}
+
+.submit-row {
+    background: white;
+    border: none;
+    padding: 12px 14px;
+}
+
+/* Buttons */
+.button, input[type=submit], input[type=button], .submit-row input {
+    background: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    padding: 10px 15px;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover {
+    background: var(--primary-light);
+}
+
+.button.default, input[type=submit].default {
+    background: var(--success-color);
+}
+
+/* Status Indicators */
+.order-count {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.9em;
+}
+
+.total-spent {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+/* User Status */
+.field-is_active .true {
+    color: var(--success-color);
+}
+
+.field-is_active .false {
+    color: var(--danger-color);
+}
+
+/* Dashboard Widgets */
+.dashboard .module table th {
+    width: auto;
+}
+
+.dashboard .module table td {
+    white-space: nowrap;
+}
+
+/* Recent Actions */
+.actionlist {
+    padding-left: 0;
+}
+
+.actionlist li {
+    list-style-type: none;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    #changelist .results {
+        margin-right: 0;
+    }
+    
+    #changelist-filter {
+        position: static;
+        width: auto;
+        margin: 0;
+    }
+    
+    .form-row {
+        padding: 8px;
+    }
+}
+
+/* Profile Picture Preview */
+.field-profile_preview img {
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.field-profile_preview img:hover {
+    transform: scale(1.1);
+}
+
+/* Custom Fieldset Styling */
+.module {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.module h2 {
+    padding: 12px 15px;
+    margin: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Message Styling */
+.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.warning {
+    background: var(--warning-color);
+    color: white;
+}
+
+.error {
+    background: var(--danger-color);
+    color: white;
+}
