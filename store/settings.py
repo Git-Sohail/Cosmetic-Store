@@ -20,6 +20,16 @@ DEFAULT_FROM_EMAIL = 'Cosmetics Store <your-email@gmail.com>'
 # Site URL for Payment Callbacks
 SITE_URL = 'https://your-domain.com'  # Replace with your actual domain
 
+# Message tags
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}
+
 # Add payment app to INSTALLED_APPS
 INSTALLED_APPS = [
     # ... existing apps ...

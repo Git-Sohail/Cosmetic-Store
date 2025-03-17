@@ -1,66 +1,336 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 {% block title %}Sign Up - Cosmetics Store{% endblock %}
 
 {% block meta_description %}Create a new account at Cosmetics Store to start shopping and managing your orders.{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Create your account
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Or
-                <a href="{% url 'users:login' %}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    sign in to your account
-                </a>
-            </p>
-        </div>
-        <form class="mt-8 space-y-6" method="post">
-            {% csrf_token %}
-            <div class="rounded-md shadow-sm -space-y-px">
-                <div>
-                    <label for="username" class="sr-only">Username</label>
-                    <input id="username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
-                </div>
-                <div>
-                    <label for="email" class="sr-only">Email address</label>
-                    <input id="email" name="email" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
-                </div>
-                <div>
-                    <label for="first_name" class="sr-only">First name</label>
-                    <input id="first_name" name="first_name" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="First name">
-                </div>
-                <div>
-                    <label for="last_name" class="sr-only">Last name</label>
-                    <input id="last_name" name="last_name" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Last name">
-                </div>
-                <div>
-                    <label for="phone" class="sr-only">Phone number</label>
-                    <input id="phone" name="phone" type="tel" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Phone number">
-                </div>
-                <div>
-                    <label for="address" class="sr-only">Address</label>
-                    <input id="address" name="address" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Address">
-                </div>
-                <div>
-                    <label for="password1" class="sr-only">Password</label>
-                    <input id="password1" name="password1" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
-                </div>
-                <div>
-                    <label for="password2" class="sr-only">Confirm password</label>
-                    <input id="password2" name="password2" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Confirm password">
+<div class="min-h-[calc(100vh-4rem)] flex bg-gradient-to-br from-brand-50 to-brand-100">
+    <!-- Left side - Sign Up Form -->
+    <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-md w-full bg-white shadow-xl rounded-2xl p-8 animate-fade-in">
+            <!-- Brand -->
+            <div class="text-center">
+                <h1 class="text-4xl font-serif font-extrabold mb-2 text-gradient">Join Our Community</h1>
+                <p class="text-lg text-gray-600">Create your account to start shopping</p>
+            </div>
+
+            <!-- Social Proof -->
+            <div class="mt-8">
+                <div class="flex justify-center space-x-8 mb-8">
+                    <div class="text-center card-hover">
+                        <div class="text-3xl font-bold text-brand-500">Free</div>
+                        <div class="text-sm text-gray-500 mt-1">Shipping</div>
+                    </div>
+                    <div class="text-center card-hover">
+                        <div class="text-3xl font-bold text-brand-500">100%</div>
+                        <div class="text-sm text-gray-500 mt-1">Authentic</div>
+                    </div>
+                    <div class="text-center card-hover">
+                        <div class="text-3xl font-bold text-brand-500">Secure</div>
+                        <div class="text-sm text-gray-500 mt-1">Shopping</div>
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Create account
-                </button>
+            <!-- Form -->
+            <form class="mt-8 space-y-6" method="post" novalidate>
+                {% csrf_token %}
+
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="rounded-md {% if 'success' in message.tags %}bg-green-50 border-green-200{% else %}bg-red-50 border-red-200{% endif %} p-4 border animate-fade-in">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas {% if 'success' in message.tags %}fa-check-circle text-green-400{% else %}fa-exclamation-circle text-red-400{% endif %}"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium {% if 'success' in message.tags %}text-green-800{% else %}text-red-800{% endif %}">
+                                    {{ message }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if form.errors %}
+                <div class="mb-6">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <div class="rounded-md bg-red-50 border-red-200 p-4 border animate-fade-in">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-circle text-red-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">
+                                        {{ field.label }}: {{ error }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="space-y-5">
+                    <!-- Username field -->
+                    <div>
+                        <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <div class="relative rounded-md shadow-sm group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-brand-500"></i>
+                            </div>
+                            {{ form.username }}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                Choose a unique username for your account
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email field -->
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <div class="relative rounded-md shadow-sm group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-brand-500"></i>
+                            </div>
+                            {{ form.email }}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                We'll use this email for order confirmations
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Name fields -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">First name</label>
+                            <div class="relative rounded-md shadow-sm group">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user-circle text-brand-500"></i>
+                                </div>
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Last name</label>
+                            <div class="relative rounded-md shadow-sm group">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user-circle text-brand-500"></i>
+                                </div>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone field -->
+                    <div>
+                        <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
+                        <div class="relative rounded-md shadow-sm group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-phone text-brand-500"></i>
+                            </div>
+                            {{ form.phone_number }}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                For delivery updates and notifications
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address field -->
+                    <div>
+                        <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <div class="relative rounded-md shadow-sm group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-map-marker-alt text-brand-500"></i>
+                            </div>
+                            {{ form.address }}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                Your shipping address for delivery
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password fields -->
+                    <div>
+                        <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative rounded-md shadow-sm group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-brand-500"></i>
+                            </div>
+                            {{ form.password1 }}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                Choose a strong password
+                            </div>
+                        </div>
+                        {% if form.password1.help_text %}
+                        <div class="mt-1 text-sm text-gray-500">
+                            {{ form.password1.help_text|safe }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
+                        <div class="relative rounded-md shadow-sm group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-brand-500"></i>
+                            </div>
+                            {{ form.password2 }}
+                            <div class="hidden group-hover:block absolute z-10 w-48 p-2 mt-1 text-sm text-gray-600 bg-white rounded-lg shadow-lg">
+                                Re-enter your password to confirm
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button type="submit" 
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent 
+                               text-sm font-medium rounded-lg text-white btn-gradient
+                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 
+                               transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-user-plus text-brand-300 group-hover:text-brand-200"></i>
+                        </span>
+                        Sign Up
+                    </button>
+                </div>
+
+                <div class="text-center mt-6">
+                    <p class="text-sm text-gray-600">
+                        Already have an account?
+                        <a href="{% url 'users:login' %}" 
+                            class="font-medium text-brand-600 hover:text-brand-500 transition duration-150 ease-in-out ml-1">
+                            Sign in
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right side - Decorative Image -->
+    <div class="hidden lg:block relative flex-1">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: linear-gradient(to bottom right, rgba(255, 51, 102, 0.9), rgba(255, 159, 179, 0.9));">
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center text-white p-8 max-w-lg animate-slide-up">
+                    <h2 class="text-5xl font-serif font-bold mb-6">Join Our Family</h2>
+                    <p class="text-xl leading-relaxed">Experience the best in beauty with our premium cosmetics collection</p>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-shine {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-shine::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            to bottom right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        transform: rotate(45deg);
+        animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+        0% {
+            transform: translateX(-100%) rotate(45deg);
+        }
+        100% {
+            transform: translateX(100%) rotate(45deg);
+        }
+    }
+
+    /* Add smooth scroll behavior */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Add a subtle animation to form inputs */
+    input, textarea {
+        transform: translateY(0);
+        transition: all 0.2s ease;
+    }
+
+    input:focus, textarea:focus {
+        transform: translateY(-2px);
+    }
+
+    /* Add hover effect to social proof numbers */
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+
+    .card-hover:hover {
+        transform: translateY(-5px);
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, #ff3366, #ff9fb3);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(to right, #ff3366, #ff9fb3);
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slide-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.5s ease-out;
+    }
+
+    .animate-slide-up {
+        animation: slide-up 0.8s ease-out;
+    }
+</style>
+{% endblock %}

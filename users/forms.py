@@ -3,20 +3,54 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
 
 class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    phone_number = forms.CharField(required=True)
+    address = forms.CharField(required=True, widget=forms.TextInput())
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'phone_number', 'address')
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone_number',  raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'add_class' 'address', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['email'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['first_name'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['last_name'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['phone_number'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['address'].widget.attrs.update({'class': 'form-textarea rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['password1'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
-        self.fields['password2'].widget.attrs.update({'class': 'form-input rounded-md shadow-sm mt-1 block w-full'})
+        # Add common classes to all fields
+        common_classes = 'appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition duration-150 ease-in-out sm:text-sm'
+        
+        self.fields['username'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Enter your username'
+        })
+        self.fields['email'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Enter your email'
+        })
+        self.fields['first_name'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'First name'
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Last name'
+        })
+        self.fields['phone_number'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Enter your phone number'
+        })
+        self.fields['address'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Enter your address'
+        })
+        self.fields['password1'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Create a password'
+        })
+        self.fields['password2'].widget.attrs.update({
+            'class': common_classes,
+            'placeholder': 'Confirm your password'
+        })
 
 class CustomUserChangeForm(UserChangeForm):
     # Remove the password field from the form

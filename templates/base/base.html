@@ -248,39 +248,6 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="rounded-md bg-{{ message.tags }}-50 p-4 mb-4 animate-fade-in">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            {% if message.tags == 'success' %}
-                                <i class="fas fa-check-circle text-green-400"></i>
-                            {% elif message.tags == 'error' %}
-                                <i class="fas fa-times-circle text-red-400"></i>
-                            {% elif message.tags == 'info' %}
-                                <i class="fas fa-info-circle text-blue-400"></i>
-                            {% elif message.tags == 'warning' %}
-                                <i class="fas fa-exclamation-circle text-yellow-400"></i>
-                            {% endif %}
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-{{ message.tags }}-800">
-                                {{ message }}
-                            </p>
-                        </div>
-                        <div class="ml-auto pl-3">
-                            <div class="-mx-1.5 -my-1.5">
-                                <button class="message-close inline-flex rounded-md p-1.5 text-{{ message.tags }}-500 hover:bg-{{ message.tags }}-100 focus:outline-none">
-                                    <span class="sr-only">Dismiss</span>
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-
         {% block content %}{% endblock %}
     </main>
 
@@ -472,4 +439,4 @@
     </script>
     {% block extra_js %}{% endblock %}
 </body>
-</html> 
+</html>
