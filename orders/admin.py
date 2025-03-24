@@ -6,8 +6,8 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['product']
     extra = 0
-    readonly_fields = ['product_image', 'total_price']
-    fields = ['product', 'product_image', 'quantity', 'price', 'total_price']
+    readonly_fields = ['product_image', 'total_price', 'product_details']
+    fields = ['product', 'product_image', 'product_details', 'quantity', 'price', 'total_price']
 
     def product_image(self, obj):
         if obj.product and obj.product.image:
@@ -19,6 +19,23 @@ class OrderItemInline(admin.TabularInline):
         return "—"
     product_image.short_description = 'Image'
 
+    def product_details(self, obj):
+        if obj.product:
+            return format_html(
+                '<div style="font-size: 12px;">'
+                '<strong>Name:</strong> {}<br>'
+                '<strong>Category:</strong> {}<br>'
+                '<strong>Stock:</strong> {}<br>'
+                '<strong>Price:</strong> ${:.2f}'
+                '</div>',
+                obj.product.name,
+                obj.product.category.name,
+                obj.product.stock,
+                obj.product.price
+            )
+        return "—"
+    product_details.short_description = 'Product Details'
+
     def total_price(self, obj):
         if obj.price and obj.quantity:
             total = obj.price * obj.quantity
@@ -28,11 +45,11 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_info', 'status_badge', 'total_amount', 'created_at']
+    list_display = ['id', 'user_info', 'status_badge', 'total_amount', 'created_at', 'customer_location']
     list_filter = ['status', 'created_at']
-    search_fields = ['id', 'user__username', 'user__email', 'address']
+    search_fields = ['id', 'user__username', 'user__email', 'address', 'phone']
     inlines = [OrderItemInline]
-    readonly_fields = ['order_summary', 'created_at', 'updated_at']
+    readonly_fields = ['order_summary', 'created_at', 'updated_at', 'customer_location']
     
     fieldsets = (
         ('Order Information', {
@@ -40,6 +57,10 @@ class OrderAdmin(admin.ModelAdmin):
                 'user', 'first_name', 'last_name', 'email', 'phone',
                 'address', 'status', 'total_amount', 'notes'
             )
+        }),
+        ('Customer Location', {
+            'fields': ('customer_location',),
+            'classes': ('wide',)
         }),
         ('Order Summary', {
             'fields': ('order_summary',),
@@ -52,74 +73,57 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
     def user_info(self, obj):
-        if obj.user:
-            return format_html(
-                '<div style="display: flex; align-items: center; gap: 8px;">'
-                '<div style="width: 32px; height: 32px; border-radius: 16px; '
-                'background: linear-gradient(45deg, #ff3366, #ff9fb3); '
-                'display: flex; align-items: center; justify-content: center; '
-                'color: white; font-weight: 500;">{}</div>'
-                '<div><strong>{} {}</strong><br/>'
-                '<span style="color: #666; font-size: 0.85em;">{}</span></div>'
-                '</div>',
-                obj.first_name[0].upper() if obj.first_name else obj.user.username[0].upper(),
-                obj.first_name,
-                obj.last_name,
-                obj.email
-            )
-        return "—"
-    user_info.short_description = 'Customer'
+        return format_html(
+            '<div style="font-size: 12px;">'
+            '<strong>Name:</strong> {}<br>'
+            '<strong>Email:</strong> {}<br>'
+            '<strong>Phone:</strong> {}'
+            '</div>',
+            f"{obj.first_name} {obj.last_name}",
+            obj.email,
+            obj.phone
+        )
+    user_info.short_description = 'Customer Info'
 
     def status_badge(self, obj):
-        status_colors = {
-            'pending': '#f1c40f',
-            'processing': '#3498db',
-            'shipped': '#2ecc71',
-            'delivered': '#27ae60',
-            'cancelled': '#e74c3c'
+        colors = {
+            'pending': 'orange',
+            'processing': 'blue',
+            'shipped': 'purple',
+            'delivered': 'green',
+            'cancelled': 'red'
         }
         return format_html(
-            '<span style="background-color: {}; color: white; padding: 4px 8px; '
-            'border-radius: 12px; font-size: 0.85em;">{}</span>',
-            status_colors.get(obj.status.lower(), '#95a5a6'),
+            '<span style="background-color: {}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">{}</span>',
+            colors.get(obj.status, 'gray'),
             obj.get_status_display()
         )
     status_badge.short_description = 'Status'
 
-    def order_summary(self, obj):
-        items = obj.items.all()
-        if not items:
-            return "No items in this order"
-        
-        summary = '<div style="margin-bottom: 20px;">'
-        for item in items:
-            summary += format_html(
-                '<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">'
-                '<img src="{}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px;" />'
-                '<div style="flex-grow: 1;">'
-                '<strong>{}</strong><br/>'
-                '<span style="color: #666;">Quantity: {} × ${:.2f}</span>'
-                '</div>'
-                '<div style="color: #2ecc71; font-weight: 500;">${:.2f}</div>'
-                '</div>',
-                item.product.image.url if item.product.image else '/static/images/no-image.png',
-                item.product.name,
-                item.quantity,
-                item.price,
-                item.quantity * item.price
-            )
-        
-        summary += format_html(
-            '<div style="border-top: 1px solid #eee; margin-top: 12px; padding-top: 12px;">'
-            '<div style="display: flex; justify-content: space-between; font-weight: 500;">'
-            '<span>Total Amount:</span>'
-            '<span style="color: #2ecc71; font-size: 1.1em;">${:.2f}</span>'
-            '</div></div>',
-            obj.total_amount
+    def customer_location(self, obj):
+        return format_html(
+            '<div style="font-size: 12px;">'
+            '<strong>Address:</strong> {}<br>'
+            '<strong>Phone:</strong> {}'
+            '</div>',
+            obj.address,
+            obj.phone
         )
-        
-        return format_html(summary + '</div>')
-    order_summary.short_description = 'Order Summary'
+    customer_location.short_description = 'Customer Location'
+
+    def order_summary(self, obj):
+        items_html = ''
+        for item in obj.items.all():
+            items_html += f'''
+                <div style="margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
+                    <strong>{item.product.name}</strong><br>
+                    Quantity: {item.quantity}<br>
+                    Price: ${item.price}<br>
+                    Total: ${item.get_cost()}
+                </div>
+            '''
+        return format_html(items_html)
+    order_summary.short_description = 'Order Items'
 
     class Media:
         css = {
